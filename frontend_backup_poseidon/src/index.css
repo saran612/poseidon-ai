@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Pure White Light Theme */
+    --bg-main: #FFFFFF;
+    --bg-secondary: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    --border-color: #E2E8F0;
+    --accent: #2563EB;
+  }
+
+  .dark {
+    /* Pure Pitch Black OLED Dark Theme (Black, not navy/slate/blue) */
+    --bg-main: #000000;
+    --bg-secondary: #000000;
+    --bg-card: #0A0A0A;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --border-color: #1F1F23;
+    --accent: #3B82F6;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* ========================================================
+   LIGHT THEME: ALL SURFACES & COMPONENTS PURE CLEAN WHITE
+   ======================================================== */
+:root:not(.dark) body,
+:root:not(.dark) main,
+:root:not(.dark) aside,
+:root:not(.dark) header,
+:root:not(.dark) nav,
+:root:not(.dark) .bg-slate-50,
+:root:not(.dark) .bg-slate-50\/70,
+:root:not(.dark) .bg-slate-50\/50,
+:root:not(.dark) .bg-slate-50\/40,
+:root:not(.dark) .bg-slate-50\/20,
+:root:not(.dark) .bg-slate-100,
+:root:not(.dark) .bg-slate-100\/70,
+:root:not(.dark) .bg-slate-100\/50 {
+  background-color: #FFFFFF !important;
+}
+
+:root:not(.dark) .border-slate-200,
+:root:not(.dark) .border-slate-100 {
+  border-color: #E2E8F0 !important;
+}
+
+:root:not(.dark) .text-slate-900,
+:root:not(.dark) .text-slate-800 {
+  color: #0F172A !important;
+}
+
+:root:not(.dark) .text-slate-600,
+:root:not(.dark) .text-slate-500 {
+  color: #475569 !important;
+}
+
+/* Interactive elements in light mode */
+:root:not(.dark) input,
+:root:not(.dark) select,
+:root:not(.dark) textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* ========================================================
+   DARK THEME: PURE BLACK OLED BASE (#000000)
+   ======================================================== */
+.dark body,
+.dark main {
+  background-color: #000000 !important;
+  color: #F8FAFC !important;
+}
+
+.dark .bg-white {
+  background-color: #0A0A0A !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-50\/50,
+.dark .bg-slate-50\/40,
+.dark .bg-slate-50\/20,
+.dark .bg-slate-100,
+.dark .bg-slate-100\/70,
+.dark .bg-slate-200 {
+  background-color: #121214 !important;
+}
+
+.dark .dark\:bg-slate-950,
+.dark .dark\:bg-slate-900,
+.dark .dark\:bg-slate-900\/90,
+.dark .dark\:bg-slate-900\/40,
+.dark .dark\:bg-slate-900\/95,
+.dark .dark\:bg-slate-800,
+.dark .dark\:bg-slate-800\/60,
+.dark .dark\:bg-slate-800\/40,
+.dark .dark\:bg-slate-800\/50 {
+  background-color: #08080A !important;
+}
+
+.dark .dark\:border-slate-800,
+.dark .dark\:border-slate-700,
+.dark .dark\:border-slate-900,
+.dark .border-slate-200,
+.dark .border-slate-100 {
+  border-color: #1C1C20 !important;
+}
+
+.dark .dark\:divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1C1C20 !important;
+}
+
+/* Crisp Clean Enterprise Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #FFFFFF;
+}
+::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #000000;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3F3F46;
+}
