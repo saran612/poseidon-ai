@@ -52,7 +52,6 @@ htmlcov/
 .tox/
 
 # Node & Frontend Build Artifacts
-frontend/
 node_modules/
 frontend_temp/node_modules/
 frontend/node_modules/
