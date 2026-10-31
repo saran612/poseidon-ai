@@ -1,5 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Map as MapLibreMap, Marker, NavigationControl } from 'maplibre-gl';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Polyline,
+  Polygon,
+  Marker,
+  useMap,
+} from 'react-leaflet';
+import L from 'leaflet';
 import {
   Layers,
   ZoomIn,
@@ -9,6 +17,7 @@ import {
   AlertTriangle,
   MapPin,
   X,
+  Activity,
 } from 'lucide-react';
 import type { Zone, Bridge, EvidenceItem, NetworkGIS } from '../types';
 
@@ -22,6 +31,21 @@ interface MissionMapProps {
   onSimulateCut: (bridgeId: string) => void;
 }
 
+// Controller component to imperatively manipulate Leaflet map instance
+const MapControllerComponent: React.FC<{
+  center: [number, number];
+  zoom: number;
+  triggerReset: number;
+}> = ({ center, zoom, triggerReset }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, zoom, { animate: true });
+  }, [triggerReset, center, zoom, map]);
+
+  return null;
+};
+
 export const MissionMap: React.FC<MissionMapProps> = ({
   zones,
   bridges,
@@ -31,11 +55,14 @@ export const MissionMap: React.FC<MissionMapProps> = ({
   onSelectBridge,
   onSimulateCut,
 }) => {
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
-  const markersRef = useRef<Marker[]>([]);
+  // Scenario configuration
+  const [selectedScenario, setSelectedScenario] = useState<'coimbatore_flood' | 'andhra_cyclone'>('coimbatore_flood');
+  const [mapCenter, setMapCenter] = useState<[number, number]>([10.990, 76.975]);
+  const [mapZoom, setMapZoom] = useState<number>(12);
+  const [resetCounter, setResetCounter] = useState<number>(0);
+  const [leafletMap, setLeafletMap] = useState<L.Map | null>(null);
 
-  // Layer visibility state
+  // Layer visibility state (all 10 operational layers supported)
   const [layers, setLayers] = useState({
     zones: true,
     river: true,
@@ -44,74 +71,38 @@ export const MissionMap: React.FC<MissionMapProps> = ({
     incidents: true,
     depots: true,
     shelters: true,
+    hospitals: true,
+    routes: true,
   });
 
   // Selected item inspector state
   const [selectedEntity, setSelectedEntity] = useState<{
-    type: 'bridge' | 'zone' | 'depot' | 'shelter' | 'incident';
+    type: 'bridge' | 'zone' | 'depot' | 'shelter' | 'hospital' | 'incident' | 'road';
     data: any;
   } | null>(null);
 
-  // Initialize MapLibre
+  // Synchronize scenario center
   useEffect(() => {
-    if (!mapContainerRef.current || mapRef.current) return;
+    if (selectedScenario === 'coimbatore_flood') {
+      setMapCenter([10.990, 76.975]);
+      setMapZoom(12);
+      setResetCounter(c => c + 1);
+    } else {
+      setMapCenter([16.5062, 80.6480]);
+      setMapZoom(11);
+      setResetCounter(c => c + 1);
+    }
+  }, [selectedScenario]);
 
-    const map = new MapLibreMap({
-      container: mapContainerRef.current,
-      style: {
-        version: 8,
-        sources: {
-          'osm-tiles': {
-            type: 'raster',
-            tiles: [
-              'https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png',
-            ],
-            tileSize: 256,
-            attribution: '© OpenStreetMap contributors, © CARTO',
-          },
-        },
-        layers: [
-          {
-            id: 'osm-tiles-layer',
-            type: 'raster',
-            source: 'osm-tiles',
-            minzoom: 0,
-            maxzoom: 19,
-          },
-        ],
-      },
-      center: [76.975, 10.990], // Center of Coimbatore Noyyal Corridor
-      zoom: 12.1,
-      pitch: 0,
-    });
-
-    map.addControl(new NavigationControl({ showCompass: true, showZoom: false }), 'top-right');
-
-    map.on('load', () => {
-      mapRef.current = map;
-      updateMapLayers(map);
-    });
-
-    return () => {
-      markersRef.current.forEach(m => m.remove());
-      markersRef.current = [];
-      map.remove();
-      mapRef.current = null;
-    };
-  }, []);
-
-  // Update map sources and layers whenever data changes
-  const updateMapLayers = (map: MapLibreMap) => {
-    if (!map.isStyleLoaded()) return;
-
-    // 1. Noyyal River Waterway Line
-    const riverCoords = networkGis?.noyyal_river || [
+  // Noyyal River waterway coordinates converted from [lon, lat] to [lat, lon]
+  const riverCoords: [number, number][] = useMemo(() => {
+    const raw = networkGis?.noyyal_river || [
       [76.885, 10.965],
-      [76.905, 10.97],
+      [76.905, 10.970],
       [76.918, 10.9712],
-      [76.935, 10.985],
+      [76.928, 10.9790],
       [76.9385, 10.9875],
-      [76.952, 10.99],
+      [76.952, 10.990],
       [76.9635, 10.993],
       [76.985, 10.9945],
       [77.015, 10.996],
@@ -120,356 +111,144 @@ export const MissionMap: React.FC<MissionMapProps> = ({
       [77.055, 10.994],
       [77.078, 10.991],
     ];
+    return raw.map(([lon, lat]) => [lat, lon]);
+  }, [networkGis]);
 
-    if (map.getSource('river-source')) {
-      (map.getSource('river-source') as any).setData({
-        type: 'Feature',
-        geometry: { type: 'LineString', coordinates: riverCoords },
-        properties: { name: 'Noyyal River Corridor' },
-      });
-    } else {
-      map.addSource('river-source', {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          geometry: { type: 'LineString', coordinates: riverCoords },
-          properties: { name: 'Noyyal River Corridor' },
-        },
-      });
-
-      map.addLayer({
-        id: 'river-layer',
-        type: 'line',
-        source: 'river-source',
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': '#2563EB',
-          'line-width': 4.5,
-          'line-opacity': 0.85,
-        },
-      });
-
-      map.addLayer({
-        id: 'river-glow-layer',
-        type: 'line',
-        source: 'river-source',
-        paint: {
-          'line-color': '#93C5FD',
-          'line-width': 9,
-          'line-opacity': 0.35,
-        },
-      });
-    }
-
-    // 2. Flood Affected Zones (Polygons)
-    const zonesFeatures = zones
-      .filter(z => z.polygon_coords && z.polygon_coords.length > 2)
-      .map(z => {
-        // Ensure closed ring
-        const coords = [...(z.polygon_coords || [])];
-        if (
-          coords.length > 0 &&
-          (coords[0][0] !== coords[coords.length - 1][0] || coords[0][1] !== coords[coords.length - 1][1])
-        ) {
-          coords.push(coords[0]);
-        }
-
-        let fillColor = '#16A34A';
-        let strokeColor = '#15803D';
-        if (z.tier === 'CRITICAL') {
-          fillColor = '#DC2626';
-          strokeColor = '#B91C1C';
-        } else if (z.tier === 'HIGH') {
-          fillColor = '#D97706';
-          strokeColor = '#B45309';
-        } else if (z.tier === 'MEDIUM') {
-          fillColor = '#CA8A04';
-          strokeColor = '#A16207';
-        }
-
-        return {
-          type: 'Feature',
-          geometry: { type: 'Polygon', coordinates: [coords] },
-          properties: {
-            zone_id: z.zone_id,
-            name: z.name,
-            tier: z.tier,
-            rank: z.rank,
-            score_expected: z.score_expected,
-            population: z.population || 0,
-            fillColor,
-            strokeColor,
-          },
-        };
-      });
-
-    if (map.getSource('zones-source')) {
-      (map.getSource('zones-source') as any).setData({
-        type: 'FeatureCollection',
-        features: zonesFeatures,
-      });
-    } else {
-      map.addSource('zones-source', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: zonesFeatures },
-      });
-
-      map.addLayer({
-        id: 'zones-fill-layer',
-        type: 'fill',
-        source: 'zones-source',
-        paint: {
-          'fill-color': ['get', 'fillColor'],
-          'fill-opacity': 0.18,
-        },
-      });
-
-      map.addLayer({
-        id: 'zones-stroke-layer',
-        type: 'line',
-        source: 'zones-source',
-        paint: {
-          'line-color': ['get', 'strokeColor'],
-          'line-width': 2.0,
-          'line-opacity': 0.85,
-        },
-      });
-
-      // Zone click listener
-      map.on('click', 'zones-fill-layer', e => {
-        if (e.features && e.features[0]) {
-          const props = e.features[0].properties;
-          const fullZone = zones.find(z => z.zone_id === props.zone_id);
-          if (fullZone) {
-            setSelectedEntity({ type: 'zone', data: fullZone });
-          }
-        }
-      });
-    }
-
-    // 3. Arterial Road Network Edges
+  // Road edges converted to [lat, lon] pairs
+  const roadSegments = useMemo(() => {
     const edges = networkGis?.edges || [];
-    const roadFeatures = edges.map(e => ({
-      type: 'Feature',
-      geometry: { type: 'LineString', coordinates: e.coordinates },
-      properties: {
-        edge_id: e.edge_id,
-        bridge_id: e.bridge_id || '',
-        is_open: e.is_open,
-        distance_km: e.distance_km,
-        duration_min: e.duration_min,
-        color: e.is_open ? '#64748B' : '#DC2626',
-        dash: e.is_open ? [1, 0] : [2, 2],
-      },
+    return edges.map(e => ({
+      ...e,
+      latLngs: e.coordinates.map(([lon, lat]) => [lat, lon] as [number, number]),
     }));
+  }, [networkGis]);
 
-    if (map.getSource('roads-source')) {
-      (map.getSource('roads-source') as any).setData({
-        type: 'FeatureCollection',
-        features: roadFeatures,
-      });
-    } else {
-      map.addSource('roads-source', {
-        type: 'geojson',
-        data: { type: 'FeatureCollection', features: roadFeatures },
-      });
-
-      map.addLayer({
-        id: 'roads-layer',
-        type: 'line',
-        source: 'roads-source',
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': ['get', 'color'],
-          'line-width': 2.5,
-          'line-opacity': 0.75,
-        },
-      });
-    }
-
-    // 4. HTML Markers (Bridges, Depots, Shelters, Incidents)
-    renderMarkers(map);
+  // Helper factory for Custom Leaflet DivIcons
+  const createBridgeIcon = (bridge: Bridge, isSelected: boolean) => {
+    const isClosed = bridge.status === 'CLOSED';
+    const html = `
+      <div class="px-2 py-1 rounded-md shadow-md text-[10px] font-bold flex items-center gap-1 border transition-transform ${
+        isSelected ? 'scale-125 ring-2 ring-[#2563EB] z-50' : 'hover:scale-110'
+      } ${
+        isClosed
+          ? 'bg-[#FEF2F2] text-[#DC2626] border-[#FCA5A5]'
+          : 'bg-white text-[#1E40AF] border-[#93C5FD]'
+      }">
+        <span class="w-2 h-2 rounded-full ${isClosed ? 'bg-[#DC2626]' : 'bg-[#2563EB]'} animate-ping"></span>
+        <span>${bridge.bridge_id.replace('BR-', '')}</span>
+        <span class="text-[8px] px-1 rounded ${isClosed ? 'bg-[#DC2626] text-white' : 'bg-[#EFF6FF] text-[#1E40AF]'}">
+          ${isClosed ? 'CUT' : 'OPEN'}
+        </span>
+      </div>
+    `;
+    return L.divIcon({
+      className: 'poseidon-bridge-marker',
+      html,
+      iconSize: [68, 28],
+      iconAnchor: [34, 14],
+    });
   };
 
-  // Re-render markers when entities update
-  const renderMarkers = (map: MapLibreMap) => {
-    markersRef.current.forEach(m => m.remove());
-    markersRef.current = [];
-
-    // Bridges Markers
-    if (layers.bridges) {
-      bridges.forEach(b => {
-        const el = document.createElement('div');
-        const isClosed = b.status === 'CLOSED';
-        const isSelected = b.bridge_id === selectedBridgeId;
-
-        el.className = `relative cursor-pointer group transition-transform ${
-          isSelected ? 'scale-125 z-40' : 'hover:scale-110 z-30'
-        }`;
-
-        el.innerHTML = `
-          <div class="px-2 py-1 rounded-md shadow-md text-[10px] font-bold flex items-center gap-1 border ${
-            isClosed
-              ? 'bg-[#FEF2F2] text-[#DC2626] border-[#FCA5A5]'
-              : 'bg-white text-[#1E40AF] border-[#93C5FD]'
-          }">
-            <span class="w-2 h-2 rounded-full ${isClosed ? 'bg-[#DC2626]' : 'bg-[#2563EB]'} animate-ping"></span>
-            <span>${b.bridge_id.replace('BR-', '')}</span>
-            <span class="text-[8px] px-1 rounded ${isClosed ? 'bg-[#DC2626] text-white' : 'bg-[#EFF6FF] text-[#1E40AF]'}">
-              ${isClosed ? 'CUT' : 'OPEN'}
-            </span>
-          </div>
-        `;
-
-        el.onclick = () => {
-          onSelectBridge(b);
-          setSelectedEntity({ type: 'bridge', data: b });
-        };
-
-        const marker = new Marker({ element: el })
-          .setLngLat([b.longitude, b.latitude])
-          .addTo(map);
-
-        markersRef.current.push(marker);
-      });
-    }
-
-    // Depots Markers
-    if (layers.depots && networkGis?.depots) {
-      networkGis.depots.forEach(d => {
-        const el = document.createElement('div');
-        el.className = 'cursor-pointer group z-20 transition-transform hover:scale-110';
-        el.innerHTML = `
-          <div class="px-2 py-1 bg-white border border-[#2563EB] rounded-md shadow-md text-[10px] font-bold text-[#172B4D] flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-[#2563EB]"></span>
-            <span>${d.id.replace('DEPOT_', '')}</span>
-            <span class="text-[8px] bg-[#EFF6FF] text-[#2563EB] px-1 rounded font-mono">${d.boats}B/${d.medical_kits}K</span>
-          </div>
-        `;
-
-        el.onclick = () => {
-          setSelectedEntity({ type: 'depot', data: d });
-        };
-
-        const marker = new Marker({ element: el })
-          .setLngLat(d.coordinates)
-          .addTo(map);
-
-        markersRef.current.push(marker);
-      });
-    }
-
-    // Shelters Markers
-    if (layers.shelters && networkGis?.shelters) {
-      networkGis.shelters.forEach(s => {
-        const el = document.createElement('div');
-        el.className = 'cursor-pointer group z-20 transition-transform hover:scale-110';
-        el.innerHTML = `
-          <div class="px-2 py-1 bg-white border border-[#16A34A] rounded-md shadow-md text-[10px] font-bold text-[#172B4D] flex items-center gap-1">
-            <span class="w-2 h-2 rounded-full bg-[#16A34A]"></span>
-            <span>${s.id.replace('SHELTER_', '')}</span>
-            <span class="text-[8px] bg-[#F0FDF4] text-[#16A34A] px-1 rounded font-mono">Cap: ${s.capacity}</span>
-          </div>
-        `;
-
-        el.onclick = () => {
-          setSelectedEntity({ type: 'shelter', data: s });
-        };
-
-        const marker = new Marker({ element: el })
-          .setLngLat(s.coordinates)
-          .addTo(map);
-
-        markersRef.current.push(marker);
-      });
-    }
-
-    // Evidence / Incident Markers
-    if (layers.incidents) {
-      evidence.forEach(ev => {
-        if (!ev.longitude || !ev.latitude) return;
-        const el = document.createElement('div');
-        el.className = 'cursor-pointer group z-25 transition-transform hover:scale-110';
-
-        const isVerified = ev.status === 'VERIFIED';
-        const colorClass = isVerified ? 'bg-[#16A34A]' : 'bg-[#D97706]';
-
-        el.innerHTML = `
-          <div class="w-5 h-5 rounded-full ${colorClass} text-white text-[9px] font-bold flex items-center justify-center shadow-md border-2 border-white">
-            !
-          </div>
-        `;
-
-        el.onclick = () => {
-          setSelectedEntity({ type: 'incident', data: ev });
-        };
-
-        const marker = new Marker({ element: el })
-          .setLngLat([ev.longitude, ev.latitude])
-          .addTo(map);
-
-        markersRef.current.push(marker);
-      });
-    }
+  const createDepotIcon = (depot: any) => {
+    const html = `
+      <div class="px-2 py-1 bg-white border border-[#2563EB] rounded-md shadow-md text-[10px] font-bold text-[#172B4D] flex items-center gap-1 hover:scale-110 transition-transform">
+        <span class="w-2 h-2 rounded-full bg-[#2563EB]"></span>
+        <span>${depot.id.replace('DEPOT_', '')}</span>
+        <span class="text-[8px] bg-[#EFF6FF] text-[#2563EB] px-1 rounded font-mono">${depot.boats}B/${depot.medical_kits}K</span>
+      </div>
+    `;
+    return L.divIcon({
+      className: 'poseidon-depot-marker',
+      html,
+      iconSize: [72, 28],
+      iconAnchor: [36, 14],
+    });
   };
 
-  // Sync state changes with MapLibre layers
-  useEffect(() => {
-    if (mapRef.current) {
-      updateMapLayers(mapRef.current);
-    }
-  }, [zones, bridges, evidence, networkGis, layers, selectedBridgeId]);
+  const createShelterIcon = (shelter: any) => {
+    const html = `
+      <div class="px-2 py-1 bg-white border border-[#16A34A] rounded-md shadow-md text-[10px] font-bold text-[#172B4D] flex items-center gap-1 hover:scale-110 transition-transform">
+        <span class="w-2 h-2 rounded-full bg-[#16A34A]"></span>
+        <span>${shelter.id.replace('SHELTER_', '')}</span>
+        <span class="text-[8px] bg-[#F0FDF4] text-[#16A34A] px-1 rounded font-mono">Cap: ${shelter.capacity}</span>
+      </div>
+    `;
+    return L.divIcon({
+      className: 'poseidon-shelter-marker',
+      html,
+      iconSize: [80, 28],
+      iconAnchor: [40, 14],
+    });
+  };
 
-  // Handle layer visibility toggles
-  useEffect(() => {
-    const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+  const createHospitalIcon = (hosp: any) => {
+    const html = `
+      <div class="px-2 py-1 bg-white border border-[#DC2626] rounded-md shadow-md text-[10px] font-bold text-[#991B1B] flex items-center gap-1 hover:scale-110 transition-transform">
+        <span class="w-2 h-2 rounded-full bg-[#DC2626]"></span>
+        <span>${hosp.id.replace('HOSP_', '')}</span>
+        <span class="text-[8px] bg-[#FEF2F2] text-[#DC2626] px-1 rounded font-mono">MED</span>
+      </div>
+    `;
+    return L.divIcon({
+      className: 'poseidon-hospital-marker',
+      html,
+      iconSize: [70, 28],
+      iconAnchor: [35, 14],
+    });
+  };
 
-    if (map.getLayer('river-layer')) {
-      map.setLayoutProperty('river-layer', 'visibility', layers.river ? 'visible' : 'none');
-      map.setLayoutProperty('river-glow-layer', 'visibility', layers.river ? 'visible' : 'none');
-    }
-    if (map.getLayer('zones-fill-layer')) {
-      map.setLayoutProperty('zones-fill-layer', 'visibility', layers.zones ? 'visible' : 'none');
-      map.setLayoutProperty('zones-stroke-layer', 'visibility', layers.zones ? 'visible' : 'none');
-    }
-    if (map.getLayer('roads-layer')) {
-      map.setLayoutProperty('roads-layer', 'visibility', layers.roads ? 'visible' : 'none');
-    }
-  }, [layers]);
+  const createIncidentIcon = (ev: EvidenceItem) => {
+    const isVerified = ev.status === 'VERIFIED';
+    const colorClass = isVerified ? 'bg-[#16A34A]' : 'bg-[#D97706]';
+    const html = `
+      <div class="w-6 h-6 rounded-full ${colorClass} text-white text-[10px] font-extrabold flex items-center justify-center shadow-md border-2 border-white hover:scale-125 transition-transform cursor-pointer">
+        !
+      </div>
+    `;
+    return L.divIcon({
+      className: 'poseidon-incident-marker',
+      html,
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+    });
+  };
 
   // Zoom controls
-  const handleZoomIn = () => mapRef.current?.zoomIn();
-  const handleZoomOut = () => mapRef.current?.zoomOut();
+  const handleZoomIn = () => leafletMap?.zoomIn();
+  const handleZoomOut = () => leafletMap?.zoomOut();
   const handleResetCorridor = () => {
-    mapRef.current?.flyTo({
-      center: [76.975, 10.990],
-      zoom: 12.1,
-      essential: true,
-    });
+    setResetCounter(c => c + 1);
   };
 
   return (
     <div className="relative w-full h-[540px] rounded-lg border border-[#E2E8F0] overflow-hidden bg-[#F8FAFC] shadow-xs flex flex-col">
       {/* Top Map Action & Control Bar */}
-      <div className="absolute top-3 left-3 right-3 z-30 flex items-center justify-between pointer-events-none">
-        {/* Left: GIS Context & Demonstration Mode Badge */}
+      <div className="absolute top-3 left-3 right-3 z-[1000] flex items-center justify-between pointer-events-none">
+        {/* Left: GIS Context & Demonstration Mode Badge + Scenario Selector */}
         <div className="pointer-events-auto flex items-center gap-2">
           <div className="bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-md border border-[#E2E8F0] shadow-xs flex items-center gap-2 text-xs">
             <Navigation className="w-3.5 h-3.5 text-[#2563EB]" />
-            <span className="font-semibold text-[#172B4D]">Noyyal Tactical GIS</span>
+            <span className="font-semibold text-[#172B4D]">OSM Leaflet Tactical GIS</span>
             <span className="text-[10px] px-1.5 py-0.5 rounded font-mono font-medium bg-[#EFF6FF] text-[#2563EB] border border-[#BFDBFE]">
               EPSG:4326 WGS84
             </span>
             <span className="text-[10px] px-1.5 py-0.5 rounded font-bold bg-[#FEF3C7] text-[#D97706] border border-[#FDE68A]">
-              SYNTHETIC DEMO
+              OPENSTREETMAP
             </span>
+          </div>
+
+          {/* Scenario Selector */}
+          <div className="bg-white/95 backdrop-blur-xs px-2 py-1 rounded-md border border-[#E2E8F0] shadow-xs flex items-center gap-1.5 text-xs">
+            <span className="text-[11px] text-[#64748B] font-medium">Scenario:</span>
+            <select
+              value={selectedScenario}
+              onChange={e => setSelectedScenario(e.target.value as any)}
+              aria-label="Select disaster scenario"
+              className="text-xs font-semibold text-[#1E40AF] bg-transparent outline-none cursor-pointer"
+            >
+              <option value="coimbatore_flood">Coimbatore Noyyal Flood</option>
+              <option value="andhra_cyclone">Andhra Pradesh Cyclone</option>
+            </select>
           </div>
         </div>
 
@@ -523,6 +302,22 @@ export const MissionMap: React.FC<MissionMapProps> = ({
           >
             Depots
           </button>
+          <button
+            onClick={() => setLayers(l => ({ ...l, shelters: !l.shelters }))}
+            className={`px-2 py-1 rounded text-[11px] font-medium transition-colors ${
+              layers.shelters ? 'bg-[#EFF6FF] text-[#2563EB] font-semibold' : 'text-[#64748B] hover:bg-slate-100'
+            }`}
+          >
+            Shelters
+          </button>
+          <button
+            onClick={() => setLayers(l => ({ ...l, hospitals: !l.hospitals }))}
+            className={`px-2 py-1 rounded text-[11px] font-medium transition-colors ${
+              layers.hospitals ? 'bg-[#EFF6FF] text-[#2563EB] font-semibold' : 'text-[#64748B] hover:bg-slate-100'
+            }`}
+          >
+            Hospitals
+          </button>
 
           <div className="w-[1px] h-4 bg-[#E2E8F0] mx-0.5" />
 
@@ -543,21 +338,210 @@ export const MissionMap: React.FC<MissionMapProps> = ({
           <button
             onClick={handleResetCorridor}
             className="p-1 rounded text-[#475569] hover:bg-slate-100 transition-colors"
-            title="Fit Entire Noyyal Corridor"
+            title="Fit Entire Disaster Extent"
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* MapLibre WebGL Canvas Container */}
-      <div ref={mapContainerRef} className="w-full h-full" />
+      {/* Leaflet MapContainer */}
+      <div className="w-full h-full">
+        <MapContainer
+          center={mapCenter}
+          zoom={mapZoom}
+          zoomControl={false}
+          className="w-full h-full"
+          ref={setLeafletMap}
+        >
+          {/* Synchronizer */}
+          <MapControllerComponent
+            center={mapCenter}
+            zoom={mapZoom}
+            triggerReset={resetCounter}
+          />
+
+          {/* OpenStreetMap Basemap TileLayer with Clean Light Style & Proper Attribution */}
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png"
+            maxZoom={19}
+            minZoom={4}
+          />
+
+          {/* 1. Noyyal River Waterway Corridor */}
+          {layers.river && (
+            <>
+              {/* Outer Cyan Glow Polyline */}
+              <Polyline
+                positions={riverCoords}
+                pathOptions={{
+                  color: '#93C5FD',
+                  weight: 8,
+                  opacity: 0.45,
+                  lineCap: 'round',
+                  lineJoin: 'round',
+                }}
+              />
+              {/* Core River Polyline */}
+              <Polyline
+                positions={riverCoords}
+                pathOptions={{
+                  color: '#2563EB',
+                  weight: 4,
+                  opacity: 0.9,
+                  lineCap: 'round',
+                  lineJoin: 'round',
+                }}
+              />
+            </>
+          )}
+
+          {/* 2. Flood Risk Zones Polygons */}
+          {layers.zones &&
+            zones
+              .filter(z => z.polygon_coords && z.polygon_coords.length > 2)
+              .map(z => {
+                const positions = (z.polygon_coords || []).map(([lon, lat]) => [lat, lon] as [number, number]);
+                let fillColor = '#16A34A';
+                let borderColor = '#15803D';
+                if (z.tier === 'CRITICAL') {
+                  fillColor = '#DC2626';
+                  borderColor = '#B91C1C';
+                } else if (z.tier === 'HIGH') {
+                  fillColor = '#D97706';
+                  borderColor = '#B45309';
+                } else if (z.tier === 'MEDIUM') {
+                  fillColor = '#CA8A04';
+                  borderColor = '#A16207';
+                }
+
+                return (
+                  <Polygon
+                    key={z.zone_id}
+                    positions={positions}
+                    pathOptions={{
+                      color: borderColor,
+                      weight: 2,
+                      fillColor: fillColor,
+                      fillOpacity: 0.18,
+                    }}
+                    eventHandlers={{
+                      click: () => {
+                        setSelectedEntity({ type: 'zone', data: z });
+                      },
+                    }}
+                  />
+                );
+              })}
+
+          {/* 3. Road Network Polylines */}
+          {layers.roads &&
+            roadSegments.map(seg => (
+              <Polyline
+                key={seg.edge_id}
+                positions={seg.latLngs}
+                pathOptions={{
+                  color: seg.is_open ? '#64748B' : '#DC2626',
+                  weight: 3,
+                  dashArray: seg.is_open ? undefined : '6, 6',
+                  opacity: 0.8,
+                }}
+                eventHandlers={{
+                  click: () => {
+                    setSelectedEntity({ type: 'road', data: seg });
+                  },
+                }}
+              />
+            ))}
+
+          {/* 4. Candidate Bridges Markers */}
+          {layers.bridges &&
+            bridges.map(b => (
+              <Marker
+                key={b.bridge_id}
+                position={[b.latitude, b.longitude]}
+                icon={createBridgeIcon(b, b.bridge_id === selectedBridgeId)}
+                eventHandlers={{
+                  click: () => {
+                    onSelectBridge(b);
+                    setSelectedEntity({ type: 'bridge', data: b });
+                  },
+                }}
+              />
+            ))}
+
+          {/* 5. Depots Markers */}
+          {layers.depots &&
+            networkGis?.depots?.map(d => (
+              <Marker
+                key={d.id}
+                position={[d.coordinates[1], d.coordinates[0]]}
+                icon={createDepotIcon(d)}
+                eventHandlers={{
+                  click: () => {
+                    setSelectedEntity({ type: 'depot', data: d });
+                  },
+                }}
+              />
+            ))}
+
+          {/* 6. Shelters Markers */}
+          {layers.shelters &&
+            networkGis?.shelters?.map(s => (
+              <Marker
+                key={s.id}
+                position={[s.coordinates[1], s.coordinates[0]]}
+                icon={createShelterIcon(s)}
+                eventHandlers={{
+                  click: () => {
+                    setSelectedEntity({ type: 'shelter', data: s });
+                  },
+                }}
+              />
+            ))}
+
+          {/* 7. Critical Hospitals Markers */}
+          {layers.hospitals &&
+            networkGis?.critical_facilities
+              ?.filter(f => f.type === 'HOSPITAL')
+              .map(h => (
+                <Marker
+                  key={h.id}
+                  position={[h.coordinates[1], h.coordinates[0]]}
+                  icon={createHospitalIcon(h)}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedEntity({ type: 'hospital', data: h });
+                    },
+                  }}
+                />
+              ))}
+
+          {/* 8. Incidents & Ground Truth Evidence Markers */}
+          {layers.incidents &&
+            evidence
+              .filter(ev => ev.latitude && ev.longitude)
+              .map(ev => (
+                <Marker
+                  key={ev.evidence_id}
+                  position={[ev.latitude!, ev.longitude!]}
+                  icon={createIncidentIcon(ev)}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedEntity({ type: 'incident', data: ev });
+                    },
+                  }}
+                />
+              ))}
+        </MapContainer>
+      </div>
 
       {/* Bottom Floating Map Legend */}
-      <div className="absolute bottom-3 left-3 z-30 bg-white/95 backdrop-blur-xs px-3 py-2 rounded-md border border-[#E2E8F0] shadow-xs text-xs pointer-events-auto">
+      <div className="absolute bottom-3 left-3 z-[1000] bg-white/95 backdrop-blur-xs px-3 py-2 rounded-md border border-[#E2E8F0] shadow-xs text-xs pointer-events-auto">
         <div className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] mb-1.5 flex items-center gap-1.5">
           <Layers className="w-3 h-3 text-[#2563EB]" />
-          GIS Map Legend
+          GIS Map Legend (OpenStreetMap)
         </div>
         <div className="flex flex-wrap items-center gap-3 text-[11px]">
           <span className="flex items-center gap-1.5">
@@ -584,12 +568,15 @@ export const MissionMap: React.FC<MissionMapProps> = ({
           <span className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#16A34A]"></span> Relief Shelter
           </span>
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#DC2626]"></span> Hospital
+          </span>
         </div>
       </div>
 
       {/* Interactive Entity Detail Drawer / Inspector */}
       {selectedEntity && (
-        <div className="absolute top-14 right-3 z-30 w-80 bg-white rounded-lg border border-[#E2E8F0] shadow-lg p-4 text-xs animate-in fade-in slide-in-from-top-2">
+        <div className="absolute top-14 right-3 z-[1000] w-84 bg-white rounded-lg border border-[#E2E8F0] shadow-lg p-4 text-xs animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0] mb-2.5">
             <div className="flex items-center gap-1.5 font-bold text-[#172B4D]">
               <MapPin className="w-4 h-4 text-[#2563EB]" />
@@ -723,6 +710,22 @@ export const MissionMap: React.FC<MissionMapProps> = ({
             </div>
           )}
 
+          {selectedEntity.type === 'hospital' && (
+            <div className="space-y-2">
+              <div className="font-bold text-sm text-[#172B4D]">{selectedEntity.data.name}</div>
+              <div className="text-[11px] text-[#64748B]">ID: {selectedEntity.data.id}</div>
+              <div className="p-2.5 bg-[#FEF2F2] rounded border border-[#FCA5A5] text-[11px]">
+                <div className="text-[#991B1B] font-bold flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5 text-[#DC2626]" />
+                  <span>Authorized Critical Trauma Facility</span>
+                </div>
+                <div className="mt-2 text-[#475569]">
+                  Emergency medical response center with standby surgical teams and triage routing.
+                </div>
+              </div>
+            </div>
+          )}
+
           {selectedEntity.type === 'incident' && (
             <div className="space-y-2">
               <div className="flex justify-between items-center">
@@ -740,6 +743,32 @@ export const MissionMap: React.FC<MissionMapProps> = ({
                 <div>People: {selectedEntity.data.people_affected}</div>
                 <div>Age: {selectedEntity.data.age_minutes}m ago</div>
               </div>
+            </div>
+          )}
+
+          {selectedEntity.type === 'road' && (
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-sm text-[#172B4D]">{selectedEntity.data.edge_id}</span>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                    selectedEntity.data.is_open
+                      ? 'bg-[#F0FDF4] text-[#16A34A] border border-[#DCFCE7]'
+                      : 'bg-[#FEF2F2] text-[#DC2626] border border-[#FCA5A5]'
+                  }`}
+                >
+                  {selectedEntity.data.is_open ? 'OPEN' : 'SEVERED / BLOCKED'}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#F8FAFC] p-2 rounded border border-[#E2E8F0]">
+                <div>Distance: {selectedEntity.data.distance_km} km</div>
+                <div>Duration: {selectedEntity.data.duration_min} min</div>
+              </div>
+              {selectedEntity.data.bridge_id && (
+                <div className="text-[11px] text-[#2563EB]">
+                  Associated Bridge: {selectedEntity.data.bridge_id}
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -59,7 +59,7 @@ python -m pip install -r requirements.txt
 alembic upgrade head
 
 # 3. Start the FastAPI server
-python -m uvicorn poseidon.main:app --host 0.0.0.0 --port 8000 --reload
+python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### 4.2. Accessing the Application

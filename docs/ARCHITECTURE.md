@@ -9,7 +9,7 @@
 
 ---
 
-## 2. Ingestion Protocol & Cryptographic Security (`poseidon.ingestion`)
+## 2. Ingestion Protocol & Cryptographic Security (`backend.ingestion`)
 
 ### 2.1. 31-Byte Compact Binary Frame Layout
 Engineered for constrained emergency radio and SMS links:
@@ -37,7 +37,7 @@ Engineered for constrained emergency radio and SMS links:
 
 ---
 
-## 3. Evidence Trust Engine (`poseidon.trust`)
+## 3. Evidence Trust Engine (`backend.trust`)
 
 ### 3.1. Confidence Formulation
 $$c_i = \text{base\_tier} \times \text{reputation} \times \text{freshness} \times \text{specificity}$$
@@ -60,7 +60,7 @@ $$c_i = \text{base\_tier} \times \text{reputation} \times \text{freshness} \time
 
 ---
 
-## 4. Disaster Prioritization Engine (`poseidon.situation`)
+## 4. Disaster Prioritization Engine (`backend.situation`)
 Multi-factor normalized scoring across 5 dimensions:
 - Life threat ($w_1 = 0.35$)
 - Exposure ($w_2 = 0.20$)
@@ -76,7 +76,7 @@ Interval Scoring:
 
 ---
 
-## 5. Fairness-Aware Relief Optimization (`poseidon.optimization`)
+## 5. Fairness-Aware Relief Optimization (`backend.optimization`)
 Powered by Google OR-Tools CP-SAT (`ReliefResourceOptimizer`):
 - Decision variables $x_{j, z} \in \mathbb{Z}_{\ge 0}$ representing resource units dispatched from depot $j$ to zone $z$.
 - Depot capacity: $\sum_z x_{j, z} \le \text{supply}[j]$.
@@ -88,7 +88,7 @@ Powered by Google OR-Tools CP-SAT (`ReliefResourceOptimizer`):
 
 ---
 
-## 6. Cascading Impact Replanner (`poseidon.replanning`)
+## 6. Cascading Impact Replanner (`backend.replanning`)
 - Road/bridge closure ingestion invalidates active routes in the topological graph (`CoimbatoreRoadNetwork`).
 - Cascading analyzer identifies affected relief teams and triggers OR-Tools re-optimization.
 - Generates versioned revised plans ($v1 \to v2$) with structural diff (cancelled, rerouted, new dispatches).

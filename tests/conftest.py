@@ -1,7 +1,7 @@
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
-from poseidon.main import app
-from poseidon.core.database import init_db
+from backend.main import app
+from backend.core.database import init_db
 
 
 @pytest_asyncio.fixture(autouse=True)

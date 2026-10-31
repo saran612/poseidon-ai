@@ -5,8 +5,8 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
-from poseidon.core.config import get_settings
-from poseidon.models import Base
+from backend.core.config import get_settings
+from backend.models import Base
 
 config = context.config
 

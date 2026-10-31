@@ -1,12 +1,12 @@
 import pytest
 
-from poseidon.geospatial.corridor import CoimbatoreRoadNetwork
-from poseidon.optimization.allocator import (
+from backend.geospatial.corridor import CoimbatoreRoadNetwork
+from backend.optimization.allocator import (
     DepotSupply,
     ReliefResourceOptimizer,
     ZoneDemand,
 )
-from poseidon.replanning.replanner import CascadingReplanningEngine
+from backend.replanning.replanner import CascadingReplanningEngine
 
 
 def test_supply_shortage_enforces_fairness_floor_and_records_violations():

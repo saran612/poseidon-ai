@@ -41,9 +41,9 @@ All numbers and metrics are 100% traceable to backend data structures and algori
 ### B. Modified Files
 1. **`ui/src/App.tsx`**: Re-architected top-level dashboard coordinating the 8-card operational overview, horizontal tab navigation, GIS map workspace, and synchronized state management.
 2. **`ui/src/main.tsx`**: Imported MapLibre GL CSS (`maplibre-gl/dist/maplibre-gl.css`) for canvas styling and map controls.
-3. **`poseidon/core/state.py`**: Initialized baseline evaluated evidence and baseline operational plan `PLAN-OPERATIONAL-01` upon coordinator startup.
-4. **`poseidon/api/v1/endpoints/situation.py`**: Enriched `/situation/zones` and `/situation/bridges` with validated coordinates, population, elevation, polygon geometries, and added `/situation/network` returning full topological GIS data (depots, shelters, road edges, river path).
-5. **`poseidon/api/v1/endpoints/replanning.py`**: Added exact before-and-after plan comparison metrics computation, `POST /replanning/reject` endpoint, and `POST /replanning/reopen-bridge` endpoint.
+3. **`backend/core/state.py`**: Initialized baseline evaluated evidence and baseline operational plan `PLAN-OPERATIONAL-01` upon coordinator startup.
+4. **`backend/api/v1/endpoints/situation.py`**: Enriched `/situation/zones` and `/situation/bridges` with validated coordinates, population, elevation, polygon geometries, and added `/situation/network` returning full topological GIS data (depots, shelters, road edges, river path).
+5. **`backend/api/v1/endpoints/replanning.py`**: Added exact before-and-after plan comparison metrics computation, `POST /replanning/reject` endpoint, and `POST /replanning/reopen-bridge` endpoint.
 6. **`tests/test_api_integration.py`**: Added integration tests verifying GIS network layer retrieval, bridge closure simulation, cascading replanning, plan approval, and bridge reopening.
 
 ---
