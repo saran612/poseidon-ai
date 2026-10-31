@@ -23,7 +23,7 @@ interface UiState {
 }
 
 export const useUiStore = create<UiState>((set) => ({
-  theme: (localStorage.getItem('poseidon-theme') as 'light' | 'dark') || 'dark',
+  theme: (localStorage.getItem('poseidon-theme') as 'light' | 'dark') || 'light',
   setTheme: (theme) => {
     localStorage.setItem('poseidon-theme', theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -32,7 +32,7 @@ export const useUiStore = create<UiState>((set) => ({
       mapTileUrl:
         theme === 'dark'
           ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-          : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+          : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     });
   },
   toggleTheme: () => {
@@ -45,7 +45,7 @@ export const useUiStore = create<UiState>((set) => ({
         mapTileUrl:
           next === 'dark'
             ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-            : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+            : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       };
     });
   },
@@ -63,6 +63,6 @@ export const useUiStore = create<UiState>((set) => ({
   closeDecisionCard: () => set({ selectedDecisionId: null }),
   audioAlertsEnabled: true,
   toggleAudioAlerts: () => set((state) => ({ audioAlertsEnabled: !state.audioAlertsEnabled })),
-  mapTileUrl: import.meta.env.VITE_MAP_TILE_URL || 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  mapTileUrl: import.meta.env.VITE_MAP_TILE_URL || 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   setMapTileUrl: (mapTileUrl) => set({ mapTileUrl }),
 }));

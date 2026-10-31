@@ -41,21 +41,46 @@
 }
 
 /* ========================================================
-   LIGHT THEME: PURE WHITE BASE (#FFFFFF)
+   LIGHT THEME: ALL SURFACES & COMPONENTS PURE CLEAN WHITE
    ======================================================== */
 :root:not(.dark) body,
 :root:not(.dark) main,
+:root:not(.dark) aside,
+:root:not(.dark) header,
+:root:not(.dark) nav,
 :root:not(.dark) .bg-slate-50,
 :root:not(.dark) .bg-slate-50\/70,
 :root:not(.dark) .bg-slate-50\/50,
 :root:not(.dark) .bg-slate-50\/40,
-:root:not(.dark) .bg-slate-50\/20 {
+:root:not(.dark) .bg-slate-50\/20,
+:root:not(.dark) .bg-slate-100,
+:root:not(.dark) .bg-slate-100\/70,
+:root:not(.dark) .bg-slate-100\/50 {
   background-color: #FFFFFF !important;
 }
 
-:root:not(.dark) .bg-slate-100,
-:root:not(.dark) .bg-slate-100\/70 {
-  background-color: #F8FAFC !important;
+:root:not(.dark) .border-slate-200,
+:root:not(.dark) .border-slate-100 {
+  border-color: #E2E8F0 !important;
+}
+
+:root:not(.dark) .text-slate-900,
+:root:not(.dark) .text-slate-800 {
+  color: #0F172A !important;
+}
+
+:root:not(.dark) .text-slate-600,
+:root:not(.dark) .text-slate-500 {
+  color: #475569 !important;
+}
+
+/* Interactive elements in light mode */
+:root:not(.dark) input,
+:root:not(.dark) select,
+:root:not(.dark) textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
 }
 
 /* ========================================================
