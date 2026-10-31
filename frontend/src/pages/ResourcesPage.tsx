@@ -69,26 +69,26 @@ export const ResourcesPage: React.FC = () => {
       </div>
 
       {/* Reserve Protocol Bar (15% reserve bar rule) */}
-      <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50/40 dark:bg-blue-950/20 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <h3 className="font-bold text-xs uppercase tracking-wider text-blue-950 dark:text-blue-200">
+            <h3 className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
               Mandatory 15% Reserve Cushion Protocol
             </h3>
           </div>
-          <p className="text-xs text-blue-800 dark:text-blue-300">
+          <p className="text-xs text-slate-600 dark:text-slate-300">
             Emergency reserve buffer retained for secondary catastrophic surges. Currently{' '}
             <strong>{reserveCount} units ({reservePct}%)</strong> designated as protected reserves.
           </p>
         </div>
 
         <div className="w-full md:w-64 space-y-1">
-          <div className="flex justify-between text-[11px] font-mono text-blue-950 dark:text-blue-200">
+          <div className="flex justify-between text-[11px] font-mono text-slate-700 dark:text-slate-300">
             <span>Reserve: {reservePct}%</span>
             <span>Target: 15% Min</span>
           </div>
-          <div className="h-2.5 bg-blue-200 dark:bg-blue-900 rounded-full overflow-hidden">
+          <div className="h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
               className={`h-full ${reservePct >= 15 ? 'bg-emerald-500' : 'bg-rose-500'}`}
               style={{ width: `${reservePct}%` }}
@@ -109,7 +109,7 @@ export const ResourcesPage: React.FC = () => {
                 onClick={() => setSelectedUnitId(unit.id)}
                 className={`p-4 rounded-xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-blue-500 bg-blue-50/20 dark:bg-blue-950/30 shadow-md ring-2 ring-blue-500/20'
+                    ? 'border-blue-500 bg-white dark:bg-slate-900 shadow-md ring-2 ring-blue-500/20'
                     : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300'
                 } space-y-3`}
               >

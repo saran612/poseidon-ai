@@ -60,7 +60,7 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, comp
     <div
       className={`border rounded-xl transition-all ${
         assignment.state === 'proposed'
-          ? 'border-blue-400 bg-blue-50/20 dark:border-blue-700 dark:bg-blue-950/20 shadow-sm'
+          ? 'border-blue-500 bg-white dark:bg-slate-900 shadow-sm ring-1 ring-blue-500/20'
           : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
       } p-3.5 space-y-2.5`}
     >

@@ -116,7 +116,7 @@ export const RoutingPage: React.FC = () => {
                 }}
                 className={`p-3 rounded-xl border text-xs cursor-pointer transition-all ${
                   selectedAsgnId === asgn.id
-                    ? 'border-blue-500 bg-blue-50/30 dark:bg-blue-950/40 shadow-xs ring-1 ring-blue-500'
+                    ? 'border-blue-500 bg-white dark:bg-slate-900 shadow-xs ring-2 ring-blue-500/20'
                     : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
                 }`}
               >

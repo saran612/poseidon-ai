@@ -174,7 +174,7 @@ export const OverviewPage: React.FC = () => {
           </div>
 
           {/* Pending Dispatches Waiting Human Approval */}
-          <div className="p-4 rounded-xl border border-blue-200 dark:border-blue-900/60 bg-blue-50/20 dark:bg-blue-950/10 shadow-xs space-y-3">
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4 text-blue-600 dark:text-blue-400" />

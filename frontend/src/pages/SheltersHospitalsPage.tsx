@@ -71,11 +71,11 @@ export const SheltersHospitalsPage: React.FC = () => {
       </div>
 
       {/* Autonomous Recommendation Panel */}
-      <div className="p-4 rounded-xl border border-indigo-200 dark:border-indigo-900/60 bg-indigo-50/30 dark:bg-indigo-950/20 shadow-xs space-y-3">
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-            <h3 className="font-bold text-xs uppercase tracking-wider text-indigo-950 dark:text-indigo-200">
+            <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <h3 className="font-bold text-xs uppercase tracking-wider text-slate-900 dark:text-white">
               Optimal Facility Recommendation Engine
             </h3>
           </div>
