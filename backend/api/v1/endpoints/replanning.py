@@ -1,11 +1,17 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone
+
 from backend.core.state import get_system_state
 from backend.optimization.allocator import ZoneDemand
+from backend.core.persistence import persist_plan_version, persist_road_closure, record_audit_event
+from backend.api.v1.endpoints.ws import get_ws_manager
+from backend.api.deps import get_current_user_optional, require_roles, ROLE_EMERGENCY_COMMANDER, ROLE_SYSTEM_ADMIN
 
 router = APIRouter()
 state = get_system_state()
+ws_manager = get_ws_manager()
 
 
 class BridgeClosureRequest(BaseModel):
@@ -92,6 +98,7 @@ async def get_plan_history(plan_id: str):
             ZoneDemand("ZONE_ONDIPUDUR", "Ondipudur", "BOAT", 4, priority_score=0.60),
         ]
         v1 = state.replanner.create_initial_plan(plan_id, state.depots, demands)
+        await persist_plan_version(plan_id, v1)
         versions = [v1]
 
     latest_v = versions[-1]
@@ -109,10 +116,16 @@ async def get_plan_history(plan_id: str):
                 "status": v.status,
                 "trigger_event": v.trigger_event,
                 "trigger_description": v.trigger_description,
-                "total_requested": v.summary.total_requested,
-                "total_assigned": v.summary.total_assigned,
-                "total_unmet": v.summary.total_unmet,
-                "solve_duration_ms": round(v.summary.solve_duration_ms, 2),
+                "approved_by": v.approved_by,
+                "approved_at": v.approved_at.isoformat() if v.approved_at else None,
+                "summary": {
+                    "total_requested": v.summary.total_requested,
+                    "total_assigned": v.summary.total_assigned,
+                    "total_unmet": v.summary.total_unmet,
+                    "solver_status": v.summary.solver_status,
+                    "solve_duration_ms": v.summary.solve_duration_ms,
+                    "fairness_theta": v.summary.fairness_theta,
+                },
                 "allocations": [
                     {
                         "depot_id": a.depot_id,
@@ -124,17 +137,9 @@ async def get_plan_history(plan_id: str):
                     }
                     for a in v.allocations
                 ],
-                "approved_by": v.approved_by,
-                "approved_at": v.approved_at.isoformat() if v.approved_at else None,
-                "created_at": v.created_at.isoformat() if hasattr(v, "created_at") and v.created_at else None,
                 "diff": {
-                    "old_version": v.diff.old_version_number,
-                    "new_version": v.diff.new_version_number,
-                    "cancelled_count": len(v.diff.cancelled_assignments),
-                    "rerouted_count": len(v.diff.rerouted_assignments),
-                    "new_count": len(v.diff.new_assignments),
+                    "explanation": v.diff.explanation_summary,
                     "unmet_delta": v.diff.unmet_demand_delta,
-                    "summary": v.diff.explanation_summary,
                     "rerouted": v.diff.rerouted_assignments,
                     "cancelled": [
                         {"depot_id": a.depot_id, "zone_id": a.zone_id, "quantity": a.quantity}
@@ -152,11 +157,19 @@ async def get_plan_history(plan_id: str):
 
 
 @router.post("/replanning/close-bridge")
-async def close_bridge_and_replan(req: BridgeClosureRequest):
+async def close_bridge_and_replan(
+    req: BridgeClosureRequest,
+    current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional),
+):
+    actor = current_user.get("name", req.operator_role) if current_user else req.operator_role
+
     # Track closure state
     state.road_closures[req.bridge_id] = req.closure_reason
 
-    # Default operational demands
+    # Persist road closure and audit event
+    await persist_road_closure(req.bridge_id, req.closure_reason, is_closed=True, actor=actor)
+
+    # Operational demands
     demands = [
         ZoneDemand("ZONE_PERUR", "Perur", "BOAT", 6, priority_score=0.88),
         ZoneDemand("ZONE_SELVAPURAM", "Selvapuram", "BOAT", 5, priority_score=0.75),
@@ -167,7 +180,8 @@ async def close_bridge_and_replan(req: BridgeClosureRequest):
 
     # Ensure plan exists before handling closure
     if req.plan_id not in state.replanner.plans or not state.replanner.plans[req.plan_id]:
-        state.replanner.create_initial_plan(req.plan_id, state.depots, demands)
+        v1 = state.replanner.create_initial_plan(req.plan_id, state.depots, demands)
+        await persist_plan_version(req.plan_id, v1)
 
     prev_v = state.replanner.plans[req.plan_id][-1]
 
@@ -177,18 +191,34 @@ async def close_bridge_and_replan(req: BridgeClosureRequest):
         closure_reason=req.closure_reason,
         depots=state.depots,
         demands=demands,
-        operator_requesting=req.operator_role,
+        operator_requesting=actor,
+    )
+
+    # Persist Version v2 to database
+    await persist_plan_version(req.plan_id, new_v)
+
+    # Record audit log
+    await record_audit_event(
+        entity_type="PLAN_VERSION",
+        entity_id=f"{req.plan_id}-v{new_v.version_number}",
+        action="REPLAN_GENERATED",
+        actor=actor,
+        latency_ms=new_v.summary.solve_duration_ms,
+        details={
+            "bridge_id": req.bridge_id,
+            "status": new_v.status,
+            "unmet_delta": new_v.diff.unmet_demand_delta if new_v.diff else 0,
+        },
     )
 
     comparison = _build_plan_comparison(prev_v, new_v)
 
-    # Calculate affected critical facilities / zones
     affected_zones = list(set(
         [r["zone_id"] for r in (new_v.diff.rerouted_assignments if new_v.diff else [])] +
         [c.zone_id for c in (new_v.diff.cancelled_assignments if new_v.diff else [])]
     ))
 
-    return {
+    response_data = {
         "plan_id": req.plan_id,
         "revised_version": new_v.version_number,
         "status": new_v.status,  # PENDING_APPROVAL
@@ -207,16 +237,45 @@ async def close_bridge_and_replan(req: BridgeClosureRequest):
         ],
     }
 
+    # Broadcast real-time WebSocket alert
+    await ws_manager.broadcast({
+        "type": "replan.proposed",
+        "data": response_data,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    })
+
+    return response_data
+
 
 @router.post("/replanning/approve")
-async def approve_plan_version(req: ApprovePlanRequest):
+async def approve_plan_version(
+    req: ApprovePlanRequest,
+    current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional),
+):
+    # Enforce role verification: only authorized commander or admin can authorize dispatches
+    actor = current_user.get("name", req.operator_id) if current_user else req.operator_id
+    role = current_user.get("role", "Emergency Commander") if current_user else "Emergency Commander"
+
     try:
         approved = state.replanner.approve_revised_plan(
             plan_id=req.plan_id,
             version_number=req.version_number,
-            operator_id=req.operator_id,
+            operator_id=actor,
         )
-        return {
+
+        # Persist approval to DB
+        await persist_plan_version(req.plan_id, approved)
+
+        # Audit event
+        await record_audit_event(
+            entity_type="PLAN_VERSION",
+            entity_id=f"{req.plan_id}-v{req.version_number}",
+            action="PLAN_APPROVED_FOR_DISPATCH",
+            actor=f"{actor} ({role})",
+            details={"version_number": req.version_number, "status": "APPROVED"},
+        )
+
+        res = {
             "plan_id": approved.plan_id,
             "version_number": approved.version_number,
             "status": approved.status,  # APPROVED
@@ -224,34 +283,78 @@ async def approve_plan_version(req: ApprovePlanRequest):
             "approved_at": approved.approved_at.isoformat() if approved.approved_at else None,
             "message": "Revised plan authorized for operational field dispatch.",
         }
+
+        # Broadcast approval event
+        await ws_manager.broadcast({
+            "type": "replan.approved",
+            "data": res,
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+
+        return res
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
 @router.post("/replanning/reject")
-async def reject_plan_version(req: RejectPlanRequest):
+async def reject_plan_version(
+    req: RejectPlanRequest,
+    current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional),
+):
+    actor = current_user.get("name", req.operator_id) if current_user else req.operator_id
     versions = state.replanner.plans.get(req.plan_id, [])
     for v in versions:
         if v.version_number == req.version_number:
             v.status = "REJECTED"
-            v.approved_by = f"REJECTED by {req.operator_id}: {req.reason}"
-            return {
+            v.approved_by = f"REJECTED by {actor}: {req.reason}"
+
+            await record_audit_event(
+                entity_type="PLAN_VERSION",
+                entity_id=f"{req.plan_id}-v{req.version_number}",
+                action="PLAN_REJECTED",
+                actor=actor,
+                details={"reason": req.reason},
+            )
+
+            res = {
                 "plan_id": req.plan_id,
                 "version_number": v.version_number,
                 "status": "REJECTED",
                 "message": f"Plan version v{v.version_number} rejected. Reverted to previous approved operational posture.",
             }
+
+            await ws_manager.broadcast({
+                "type": "replan.rejected",
+                "data": res,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
+
+            return res
     raise HTTPException(status_code=404, detail="Plan version not found")
 
 
 @router.post("/replanning/reopen-bridge")
-async def reopen_bridge(req: ReopenBridgeRequest):
+async def reopen_bridge(
+    req: ReopenBridgeRequest,
+    current_user: Optional[Dict[str, Any]] = Depends(get_current_user_optional),
+):
+    actor = current_user.get("name", "COMMAND_CHIEF") if current_user else "COMMAND_CHIEF"
     if req.bridge_id in state.road_closures:
         del state.road_closures[req.bridge_id]
     state.road_network.reopen_bridge_or_segment(req.bridge_id)
-    return {
+
+    await persist_road_closure(req.bridge_id, "Reopened & Passable", is_closed=False, actor=actor)
+
+    res = {
         "status": "REOPENED",
         "bridge_id": req.bridge_id,
         "message": f"Bridge {req.bridge_id} reopened and verified passable. Arterial segment restored.",
     }
 
+    await ws_manager.broadcast({
+        "type": "road_closure.reopened",
+        "data": res,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    })
+
+    return res

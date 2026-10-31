@@ -8,9 +8,9 @@ POSEIDON AI transforms fragmented, delayed, duplicated, contradictory, and unrel
 ---
 
 ## 1. Geographical Focus
-- **Region:** Noyyal River corridor and urban lake clusters in **Coimbatore District, Tamil Nadu**.
-- **Key Waterbodies & Corridors:** Perur Basin, Selvampathy & Kumaraswamy Lakes, Ukkadam Periyakulam, Singanallur Lake, and Ondipudur Reach.
-- **Candidate Crossing Bridges:** Perur Noyyal Bridge, Siruvani Road Bridge, Ukkadam-Sungam Bypass Bridge, and Trichy Road Singanallur Crossing.
+- **Region:** Godavari and Krishna River basins, Musi River corridor, and urban/semi-urban drainage networks across **Telangana** (including Hyderabad, Bhadradri Kothagudem, Warangal, and Khammam).
+- **Key Waterbodies & Corridors:** Godavari Basin (Bhadrachalam & Kaleshwaram reaches), Krishna Basin (Nagarjuna Sagar & Jurala catchments), Musi River urban drainage corridor, Hussain Sagar, Osmansagar, and Himayatsagar lake clusters.
+- **Candidate Crossing Bridges & Vital Arteries:** Bhadrachalam Godavari Bridge, Chaderghat & Moosarambagh Musi River Causeways, Puranapul Crossing, Warangal-Khammam Highway bridges, and Manair River crossing bridges.
 
 ---
 

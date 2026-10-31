@@ -2,6 +2,13 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppShell } from '@/comp/layout/AppShell';
+import { MobileShell } from '@/components/layout/MobileShell';
+import { MobilePortalWrapper } from '@/pages/MobilePortalPage';
+import { MobileLoginPage } from '@/pages/mobile/MobileLoginPage';
+import { MobilePublicPortal } from '@/pages/mobile/MobilePublicPortal';
+import { MobileNGOPortal } from '@/pages/mobile/MobileNGOPortal';
+import { MobilePolicePortal } from '@/pages/mobile/MobilePolicePortal';
+import { MobileHospitalPortal } from '@/pages/mobile/MobileHospitalPortal';
 import { realtimeClient } from '@/lib/realtime';
 
 const OverviewPage = lazy(() => import('@/pages/OverviewPage').then(m => ({ default: m.OverviewPage })));
@@ -49,6 +56,19 @@ export const App: React.FC = () => {
           }
         >
           <Routes>
+            {/* Standalone Mobile Login & Gateway */}
+            <Route path="/m/login" element={<MobileLoginPage />} />
+
+            {/* Standalone Mobile Portal (Dedicated mobile shell with bottom dock) */}
+            <Route path="/m" element={<MobileShell />}>
+              <Route index element={<MobilePortalWrapper />} />
+              <Route path="public" element={<MobilePublicPortal />} />
+              <Route path="ngo" element={<MobileNGOPortal />} />
+              <Route path="police" element={<MobilePolicePortal />} />
+              <Route path="hospital" element={<MobileHospitalPortal />} />
+            </Route>
+
+            {/* Desktop Web Command Shell */}
             <Route path="/" element={<AppShell />}>
               <Route index element={<OverviewPage />} />
               <Route path="map" element={<MapPage />} />

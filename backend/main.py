@@ -18,8 +18,17 @@ settings = get_settings()
 async def lifespan(app: FastAPI):
     # Startup: Ensure database schema is ready
     await init_db()
+<<<<<<< Updated upstream
     # Load SAHAYA ML models into memory once at application startup
     get_model_loader().load_models()
+=======
+    try:
+        from backend.core.persistence import load_state_from_db
+        from backend.core.state import get_system_state
+        await load_state_from_db(get_system_state())
+    except Exception as e:
+        print(f"[STARTUP_NOTICE] DB State init: {e}")
+>>>>>>> Stashed changes
     yield
 
 
