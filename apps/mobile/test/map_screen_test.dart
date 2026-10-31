@@ -10,7 +10,6 @@ import 'package:poseidon_mobile/features/map/models/map_models.dart';
 import 'package:poseidon_mobile/features/map/repositories/map_repository.dart';
 import 'package:poseidon_mobile/features/map/screens/map_screen.dart';
 import 'package:poseidon_mobile/features/map/widgets/map_entity_bottom_sheet.dart';
-import 'package:poseidon_mobile/features/map/widgets/map_layer_controls.dart';
 import 'package:poseidon_mobile/features/map/widgets/map_legend.dart';
 
 class MockMapRepository extends MapRepository {

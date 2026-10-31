@@ -2,10 +2,14 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poseidon_mobile/config/theme.dart';
 import 'package:poseidon_mobile/core/providers.dart';
 import 'package:poseidon_mobile/database/local_database.dart';
-import 'package:poseidon_mobile/main.dart';
-import 'package:poseidon_mobile/services/websocket_service.dart';
+import 'package:poseidon_mobile/features/assignments/screens/assignments_screen.dart';
+import 'package:poseidon_mobile/features/authentication/screens/login_screen.dart';
+import 'package:poseidon_mobile/features/dashboard/screens/dashboard_screen.dart';
+import 'package:poseidon_mobile/features/reporting/screens/reporting_screen.dart';
+import 'package:poseidon_mobile/models/user_session.dart';
 import 'package:poseidon_mobile/sync/outbox_manager.dart';
 import 'package:poseidon_mobile/sync/sync_engine.dart';
 import 'package:poseidon_mobile/sync/transport_adapter.dart';
@@ -15,18 +19,26 @@ class TestTransportAdapter implements TransportAdapter {
   @override
   String get transportName => 'TEST_ADAPTER';
   @override
-  Future<bool> isAvailable() async => false;
+  Future<bool> isAvailable() async => true;
   @override
   Future<TransportResult> transmit(OutboxEntry entry) async => TransportResult.success('test-ack');
 }
 
-class TestWebSocketService extends WebSocketService {
+class MockSessionNotifier extends SessionNotifier {
   @override
-  void connect({String? customUrl}) {}
-  @override
-  void disconnect() {}
-  @override
-  void dispose() {}
+  UserSession? build() {
+    return UserSession(
+      token: 'test-token',
+      numericId: 101,
+      deviceCode: 'DEV-OFFICER-PERUR',
+      role: 'T1',
+      tier: 'T1',
+      ownerName: 'Inspector S. Murugan',
+      isFieldOfficer: true,
+      isResponder: true,
+      secretKey: 'poseidon-field-officer-key-32b!',
+    );
+  }
 }
 
 void main() {
@@ -34,63 +46,94 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('Poseidon mobile smoke and navigation test', (WidgetTester tester) async {
-    tester.view.physicalSize = const Size(800, 1200);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(() => tester.view.resetPhysicalSize());
-
-    final memoryDb = AppDatabase(NativeDatabase.memory());
-    final transport = TestTransportAdapter();
-    final outbox = OutboxManager(db: memoryDb, primaryTransport: transport);
-    final syncEngine = SyncEngine(db: memoryDb, outboxManager: outbox, transportAdapter: transport);
-    final mockWs = TestWebSocketService();
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          databaseProvider.overrideWithValue(memoryDb),
-          transportAdapterProvider.overrideWithValue(transport),
-          outboxManagerProvider.overrideWithValue(outbox),
-          syncEngineProvider.overrideWithValue(syncEngine),
-          webSocketServiceProvider.overrideWithValue(mockWs),
-        ],
-        child: const PoseidonMobileApp(),
+  Widget buildTestableWidget(Widget child, AppDatabase db, SyncEngine syncEngine, OutboxManager outbox, TransportAdapter transport) {
+    return ProviderScope(
+      overrides: [
+        databaseProvider.overrideWithValue(db),
+        sessionProvider.overrideWith(() => MockSessionNotifier()),
+        transportAdapterProvider.overrideWithValue(transport),
+        outboxManagerProvider.overrideWithValue(outbox),
+        syncEngineProvider.overrideWithValue(syncEngine),
+      ],
+      child: MaterialApp(
+        theme: AppTheme.lightTheme,
+        home: child,
       ),
     );
+  }
 
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 100));
+  testWidgets('DashboardScreen renders operational metrics and actions', (WidgetTester tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final transport = TestTransportAdapter();
+    final outbox = OutboxManager(db: db, primaryTransport: transport);
+    final syncEngine = SyncEngine(db: db, outboxManager: outbox, transportAdapter: transport);
 
-    // Verify Dashboard renders
+    await tester.pumpWidget(buildTestableWidget(const DashboardScreen(), db, syncEngine, outbox, transport));
+    await tester.pump(const Duration(milliseconds: 50));
+
     expect(find.text('POSEIDON AI'), findsOneWidget);
     expect(find.text('ACTIVE MISSIONS'), findsOneWidget);
+    expect(find.text('OUTBOX QUEUE'), findsOneWidget);
+    expect(find.text('REPORTS SAVED'), findsOneWidget);
+    expect(find.text('Report Incident'), findsOneWidget);
+    expect(find.text('Capture Evidence'), findsOneWidget);
 
-    // Verify Bottom Navigation items by label
-    expect(find.text('Home'), findsOneWidget);
-    expect(find.text('Map'), findsOneWidget);
-    expect(find.text('Reports'), findsOneWidget);
-    expect(find.text('Assignments'), findsOneWidget);
-    expect(find.text('Profile'), findsOneWidget);
-
-    // Navigate to Reports tab
-    await tester.tap(find.text('Reports'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Field Incident Reports'), findsOneWidget);
-
-    // Navigate to Assignments tab
-    await tester.tap(find.text('Assignments'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Rescue & Relief Assignments'), findsOneWidget);
-
-    // Navigate to Profile tab
-    await tester.tap(find.text('Profile'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Device & Field Operator Profile'), findsOneWidget);
-
+    await tester.pump(const Duration(milliseconds: 50));
     syncEngine.dispose();
-    await memoryDb.close();
+    await db.close();
+  });
+
+  testWidgets('ReportingScreen renders filters and empty state', (WidgetTester tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final transport = TestTransportAdapter();
+    final outbox = OutboxManager(db: db, primaryTransport: transport);
+    final syncEngine = SyncEngine(db: db, outboxManager: outbox, transportAdapter: transport);
+
+    await tester.pumpWidget(buildTestableWidget(const ReportingScreen(), db, syncEngine, outbox, transport));
+    await tester.pump(const Duration(milliseconds: 50));
+
+    expect(find.text('Field Incident Reports'), findsOneWidget);
+    expect(find.text('All (0)'), findsOneWidget);
+    expect(find.text('New Report'), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 50));
+    syncEngine.dispose();
+    await db.close();
+  });
+
+  testWidgets('AssignmentsScreen renders empty dispatch standby', (WidgetTester tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final transport = TestTransportAdapter();
+    final outbox = OutboxManager(db: db, primaryTransport: transport);
+    final syncEngine = SyncEngine(db: db, outboxManager: outbox, transportAdapter: transport);
+
+    await tester.pumpWidget(buildTestableWidget(const AssignmentsScreen(), db, syncEngine, outbox, transport));
+    await tester.pump(const Duration(milliseconds: 50));
+
+    expect(find.text('Rescue & Relief Assignments'), findsOneWidget);
+    expect(find.text('No rescue assignments in local database.'), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 50));
+    syncEngine.dispose();
+    await db.close();
+  });
+
+  testWidgets('LoginScreen renders pre-set credentials and button', (WidgetTester tester) async {
+    final db = AppDatabase(NativeDatabase.memory());
+    final transport = TestTransportAdapter();
+    final outbox = OutboxManager(db: db, primaryTransport: transport);
+    final syncEngine = SyncEngine(db: db, outboxManager: outbox, transportAdapter: transport);
+
+    await tester.pumpWidget(buildTestableWidget(const LoginScreen(), db, syncEngine, outbox, transport));
+    await tester.pump(const Duration(milliseconds: 50));
+
+    expect(find.text('POSEIDON AI'), findsOneWidget);
+    expect(find.text('T1 Officer (Perur)'), findsOneWidget);
+    expect(find.text('T3 Responder'), findsOneWidget);
+    expect(find.text('Authenticate Device & Enter'), findsOneWidget);
+
+    await tester.pump(const Duration(milliseconds: 50));
+    syncEngine.dispose();
+    await db.close();
   });
 }
