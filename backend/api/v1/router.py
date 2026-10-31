@@ -11,10 +11,12 @@ from backend.api.v1.endpoints import (
     assignments,
     ws,
     map as map_endpoints,
+    ml,
 )
 
 api_router = APIRouter()
 api_router.include_router(health.router, tags=["Health"])
+api_router.include_router(ml.router, prefix="/ml", tags=["SAHAYA Machine Learning Intelligence"])
 api_router.include_router(auth.router, tags=["Authentication & Session"])
 api_router.include_router(map_endpoints.router, tags=["Geographic & Spatial Intelligence"])
 api_router.include_router(devices.router, tags=["Devices"])
