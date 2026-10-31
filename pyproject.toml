@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poseidon-ai"
+version = "0.1.0"
+description = "Predictive, Offline-First Disaster Intelligence & Autonomous Relief Coordination Platform"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    { name = "POSEIDON Core Team" }
+]
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "sqlalchemy>=2.0.35",
+    "aiosqlite>=0.20.0",
+    "asyncpg>=0.30.0",
+    "alembic>=1.14.0",
+    "networkx>=3.4.0",
+    "shapely>=2.0.6",
+    "ortools>=9.11.0",
+    "scikit-learn>=1.5.0",
+    "httpx>=0.28.0",
+    "websockets>=13.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["poseidon*"]
+exclude = ["alembic*", "tests*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+python_files = ["test_*.py"]

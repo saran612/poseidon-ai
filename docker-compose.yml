@@ -1,0 +1,39 @@
+services:
+  poseidon-db:
+    image: postgis/postgis:16-3.4
+    container_name: poseidon-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: poseidon_db
+      POSTGRES_USER: poseidon
+      POSTGRES_PASSWORD: poseidon_secure_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U poseidon -d poseidon_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  poseidon-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poseidon-api
+    restart: unless-stopped
+    depends_on:
+      poseidon-db:
+        condition: service_healthy
+    environment:
+      ENVIRONMENT: production
+      DATABASE_URL: postgresql+asyncpg://poseidon:poseidon_secure_password_2026@poseidon-db:5432/poseidon_db
+      DATABASE_ECHO: "false"
+      DEFAULT_HMAC_SECRET: "poseidon-pre-shared-hmac-secret-key-32b!"
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:
+
