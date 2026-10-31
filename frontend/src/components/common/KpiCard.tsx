@@ -61,7 +61,7 @@ export const KpiCard: React.FC<KpiCardProps> = ({
 
   return (
     <div
-      className={`p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col justify-between ${severityBorder} ${className}`}
+      className={`p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs flex flex-col justify-between ${severityBorder} ${className}`}
     >
       {/* Top: Label & Icon Chip */}
       <div className="flex items-center justify-between gap-1 mb-2">

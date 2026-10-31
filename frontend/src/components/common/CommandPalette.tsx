@@ -43,7 +43,7 @@ export const CommandPalette: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in">
-      <div className="w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden flex flex-col">
+      <div className="w-full max-w-xl bg-white dark:bg-black border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl overflow-hidden flex flex-col">
         {/* Input */}
         <div className="p-3 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2.5">
           <Search className="w-5 h-5 text-slate-400" />
@@ -98,7 +98,7 @@ export const CommandPalette: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="p-2.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 text-[11px] text-slate-400 flex justify-between">
+        <div className="p-2.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-black/60 text-[11px] text-slate-400 flex justify-between">
           <span>Navigate with <strong>Enter</strong> or click</span>
           <span>Shortcut: <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 rounded font-mono">⌘K</kbd></span>
         </div>

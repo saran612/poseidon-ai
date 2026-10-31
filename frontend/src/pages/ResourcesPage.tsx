@@ -12,9 +12,9 @@ import {
   Radio,
 } from 'lucide-react';
 import { mockApi } from '@/lib/api';
-import { ReliabilityBar } from '@/components/common/ReliabilityBar';
-import { StaleBadge } from '@/components/common/StaleBadge';
-import { KpiCard } from '@/components/common/KpiCard';
+import { ReliabilityBar } from '@/comp/common/ReliabilityBar';
+import { StaleBadge } from '@/comp/common/StaleBadge';
+import { KpiCard } from '@/comp/common/KpiCard';
 import type { ResourceType } from '@/types';
 
 export const ResourcesPage: React.FC = () => {
@@ -69,7 +69,7 @@ export const ResourcesPage: React.FC = () => {
       </div>
 
       {/* Reserve Protocol Bar (15% reserve bar rule) */}
-      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -109,8 +109,8 @@ export const ResourcesPage: React.FC = () => {
                 onClick={() => setSelectedUnitId(unit.id)}
                 className={`p-4 rounded-xl border transition-all cursor-pointer ${
                   isSelected
-                    ? 'border-blue-500 bg-white dark:bg-slate-900 shadow-md ring-2 ring-blue-500/20'
-                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300'
+                    ? 'border-blue-500 bg-white dark:bg-black shadow-md ring-2 ring-blue-500/20'
+                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-black hover:border-slate-300'
                 } space-y-3`}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -165,7 +165,7 @@ export const ResourcesPage: React.FC = () => {
         {/* Right Col: Unit Details & Audit History */}
         <div className="space-y-4">
           {selectedUnit ? (
-            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4 text-xs">
+            <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-4 text-xs">
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
                 <div>
                   <h3 className="font-bold text-sm text-slate-900 dark:text-white">

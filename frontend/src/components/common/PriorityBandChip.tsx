@@ -1,14 +1,17 @@
 import React from 'react';
 import { AlertCircle, AlertTriangle, ShieldCheck, Info } from 'lucide-react';
 import type { PriorityBand } from '@/types';
+import { bandFromScore } from '@/lib/priority';
 
 interface PriorityBandChipProps {
-  band: PriorityBand;
+  band?: PriorityBand;
   score?: number;
   className?: string;
 }
 
 export const PriorityBandChip: React.FC<PriorityBandChipProps> = ({ band, score, className = '' }) => {
+  const effectiveBand = score !== undefined ? bandFromScore(score) : (band || 'LOW');
+
   const config = {
     CRITICAL: {
       label: 'CRITICAL',
@@ -30,7 +33,7 @@ export const PriorityBandChip: React.FC<PriorityBandChipProps> = ({ band, score,
       icon: ShieldCheck,
       classes: 'bg-slate-100 text-slate-800 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
     },
-  }[band];
+  }[effectiveBand];
 
   const IconComponent = config.icon;
 

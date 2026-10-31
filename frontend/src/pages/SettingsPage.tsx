@@ -49,7 +49,7 @@ export const SettingsPage: React.FC = () => {
       {/* Grid */}
       <div className="space-y-4 text-xs">
         {/* Localization & Theme */}
-        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-4">
           <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
             <Languages className="w-4 h-4 text-blue-600" />
             Language & Interface Theme
@@ -97,7 +97,7 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* Map Tile Source */}
-        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+        <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
           <h3 className="font-bold text-sm text-slate-900 dark:text-white">
             Map Raster Tile Source
           </h3>
@@ -128,7 +128,7 @@ export const SettingsPage: React.FC = () => {
               className="p-2.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs"
             >
               <Bridge className="w-4 h-4" />
-              Close Perur Bridge
+              Close Musi River Bridge
             </button>
             <button
               onClick={() => realtimeClient.triggerFillShelter()}

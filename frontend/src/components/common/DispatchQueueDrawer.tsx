@@ -19,9 +19,9 @@ export const DispatchQueueDrawer: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end bg-slate-950/40 backdrop-blur-xs animate-in fade-in">
-      <div className="w-full max-w-md h-full bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col">
+      <div className="w-full max-w-md h-full bg-white dark:bg-black border-l border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-black">
           <div className="flex items-center gap-2">
             <Send className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             <div>

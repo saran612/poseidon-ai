@@ -1,67 +1,242 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+
+  --color-info: hsl(var(--info));
+  --color-info-foreground: hsl(var(--info-foreground));
+
+  --shadow-subtle: var(--shadow-elevation-card);
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 @layer base {
   :root {
-    --bg-main: #F8FAFC;
-    --bg-surface: #FFFFFF;
-    --bg-subtle: #F1F5F9;
-    --text-primary: #0F172A;
+    /* ========================================================
+       MISSION-CRITICAL EOC THEME: CRISP LIGHT SURFACES
+       High-contrast slate/zinc with marine accents (>= 4.5:1 WCAG AA)
+       ======================================================== */
+    --bg-main: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-subtle: #f1f5f9;
+    --text-primary: #0f172a;
     --text-secondary: #334155;
-    --text-muted: #475569;
-    --border-subtle: #E2E8F0;
-    --border-strong: #CBD5E1;
+    --text-muted: #64748b;
+    --border-subtle: #e2e8f0;
+    --border-strong: #cbd5e1;
 
-    --color-primary: #2563EB;
-    --color-critical: #DC2626;
-    --color-high: #D97706;
-    --color-medium: #CA8A04;
-    --color-low: #475569;
-    --color-safe: #16A34A;
-    --color-info: #0284C7;
+    /* Semantic Alert Colors (Light Theme: Darker, high-contrast) */
+    --color-primary: #2563eb;
+    --color-critical: #dc2626;
+    --color-high: #d97706;
+    --color-medium: #ca8a04;
+    --color-low: #64748b;
+    --color-safe: #059669;
+    --color-info: #0284c7;
+
+    /* Semantic Alert Tokens Aliases */
+    --color-danger: var(--color-critical);
+    --color-warning: var(--color-high);
+    --color-success: var(--color-safe);
+
+    /* HSL Tokens for Shadcn UI & Chart Interoperability */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 214 32% 91%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 214 32% 91%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 214 32% 91%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 160 84% 39%;
+    --success-foreground: 210 40% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 210 40% 98%;
+    --info: 199 89% 48%;
+    --info-foreground: 210 40% 98%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+    --radius: 0.5rem;
+
+    /* Subtle Card Elevation & Shadows */
+    --shadow-elevation-card: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+    --shadow-elevation-dropdown: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+
+    /* Chart Palettes (Tabular EOC telemetry) */
+    --chart-1: 221 83% 53%;
+    --chart-2: 160 84% 39%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 199 89% 48%;
+    --chart-5: 262 83% 58%;
+    --chart-6: 0 72% 51%;
   }
 
   .dark {
-    --bg-main: #090D16;
-    --bg-surface: #111827;
-    --bg-subtle: #1F2937;
-    --text-primary: #F8FAFC;
-    --text-secondary: #E2E8F0;
-    --text-muted: #94A3B8;
-    --border-subtle: #1F2937;
-    --border-strong: #374151;
+    /* ========================================================
+       MISSION-CRITICAL EOC THEME: PURE BLACK COMMAND CENTER
+       OLED True Black Base with Elevated Pure Dark Charcoal Surfaces (>= 4.5:1 WCAG AA)
+       ======================================================== */
+    --bg-main: #000000;
+    --bg-surface: #0a0a0a;
+    --bg-subtle: #121212;
+    --text-primary: #ffffff;
+    --text-secondary: #e4e4e7;
+    --text-muted: #a1a1aa;
+    --border-subtle: #222222;
+    --border-strong: #333333;
 
-    --color-primary: #3B82F6;
-    --color-critical: #EF4444;
-    --color-high: #F59E0B;
-    --color-medium: #EAB308;
-    --color-low: #94A3B8;
-    --color-safe: #22C55E;
-    --color-info: #38BDF8;
+    /* Semantic Alert Colors (Dark Theme: Vivid, calibrated for pure black surfaces) */
+    --color-primary: #3b82f6;
+    --color-critical: #ef4444;
+    --color-high: #f59e0b;
+    --color-medium: #eab308;
+    --color-low: #71717a;
+    --color-safe: #10b981;
+    --color-info: #0ea5e9;
+
+    /* Semantic Alert Tokens Aliases */
+    --color-danger: var(--color-critical);
+    --color-warning: var(--color-high);
+    --color-success: var(--color-safe);
+
+    /* HSL Tokens for Shadcn UI & Chart Interoperability */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 158 64% 52%;
+    --success-foreground: 0 0% 0%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+    --info: 199 89% 48%;
+    --info-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+
+    /* Subtle Card Elevation & Crisp Marine Border Depth */
+    --shadow-elevation-card: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --shadow-elevation-dropdown: 0 12px 24px -4px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
+
+    /* Chart Palettes (Dark Navy Command Center) */
+    --chart-1: 217 91% 60%;
+    --chart-2: 158 64% 52%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 199 89% 48%;
+    --chart-5: 262 83% 58%;
+    --chart-6: 0 84% 60%;
+  }
+
+  html {
+    font-size: 17px;
   }
 
   body {
     background-color: var(--bg-main);
     color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                color 0.15s ease,
+                border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  /* Mission-Critical Accessible Focus Rings */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Typography with Tabular Figures for Timers, Telemetry, Coordinates & Status */
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-feature-settings: "tnum" 1, "cv02" 1;
+    font-feature-settings: "tnum" 1, "cv02" 1, "cv03" 1, "cv04" 1;
     font-variant-numeric: tabular-nums;
   }
 
-  .tabular-nums {
+  .tabular-nums,
+  table,
+  th,
+  td,
+  time,
+  [data-tabular="true"] {
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
   }
 }
 
-/* Base custom utility classes */
+/* ========================================================
+   BASE CUSTOM UTILITY CLASSES (STRICT PRESERVATION)
+   ======================================================== */
 .bg-app-main {
   background-color: var(--bg-main);
 }
@@ -87,7 +262,70 @@
   color: var(--text-muted);
 }
 
-/* Crisp Clean Enterprise Scrollbars */
+/* ========================================================
+   SEMANTIC ALERT & STATUS UTILITIES
+   Mission-critical emergency operations center triage levels
+   ======================================================== */
+.text-status-critical { color: var(--color-critical); }
+.text-status-high     { color: var(--color-high); }
+.text-status-medium   { color: var(--color-medium); }
+.text-status-low      { color: var(--color-low); }
+.text-status-safe     { color: var(--color-safe); }
+.text-status-info     { color: var(--color-info); }
+
+.bg-status-critical { background-color: var(--color-critical); }
+.bg-status-high     { background-color: var(--color-high); }
+.bg-status-medium   { background-color: var(--color-medium); }
+.bg-status-low      { background-color: var(--color-low); }
+.bg-status-safe     { background-color: var(--color-safe); }
+.bg-status-info     { background-color: var(--color-info); }
+
+.border-status-critical { border-color: var(--color-critical); }
+.border-status-high     { border-color: var(--color-high); }
+.border-status-medium   { border-color: var(--color-medium); }
+.border-status-low      { border-color: var(--color-low); }
+.border-status-safe     { border-color: var(--color-safe); }
+.border-status-info     { border-color: var(--color-info); }
+
+/* Badges / Chips with High Contrast & Soft Tint Backgrounds */
+.badge-critical {
+  background-color: color-mix(in srgb, var(--color-critical) 12%, transparent);
+  color: var(--color-critical);
+  border: 1px solid color-mix(in srgb, var(--color-critical) 28%, transparent);
+}
+.badge-high {
+  background-color: color-mix(in srgb, var(--color-high) 12%, transparent);
+  color: var(--color-high);
+  border: 1px solid color-mix(in srgb, var(--color-high) 28%, transparent);
+}
+.badge-medium {
+  background-color: color-mix(in srgb, var(--color-medium) 12%, transparent);
+  color: var(--color-medium);
+  border: 1px solid color-mix(in srgb, var(--color-medium) 28%, transparent);
+}
+.badge-low {
+  background-color: color-mix(in srgb, var(--color-low) 12%, transparent);
+  color: var(--color-low);
+  border: 1px solid color-mix(in srgb, var(--color-low) 24%, transparent);
+}
+.badge-safe {
+  background-color: color-mix(in srgb, var(--color-safe) 12%, transparent);
+  color: var(--color-safe);
+  border: 1px solid color-mix(in srgb, var(--color-safe) 28%, transparent);
+}
+.badge-info {
+  background-color: color-mix(in srgb, var(--color-info) 12%, transparent);
+  color: var(--color-info);
+  border: 1px solid color-mix(in srgb, var(--color-info) 28%, transparent);
+}
+
+/* ========================================================
+   CRISP MISSION-CRITICAL ENTERPRISE SCROLLBARS
+   ======================================================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--bg-main);
+}
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -97,7 +335,8 @@
 }
 ::-webkit-scrollbar-thumb {
   background: var(--border-strong);
-  border-radius: 4px;
+  border-radius: 9999px;
+  border: 1px solid var(--bg-main);
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);

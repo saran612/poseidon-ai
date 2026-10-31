@@ -119,13 +119,13 @@ class RealtimeClient {
             id: `REP-DUP-${Date.now()}`,
             timestamp: new Date().toISOString(),
             wardId: 'ZONE_UKKADAM',
-            wardName: 'Ward 84 - Ukkadam',
+            wardName: 'Sector 14 - Musi Riverbank',
             tier: 'T3',
             reliability: 0.65,
             source: 'citizen_app',
-            text: 'Duplicate alert: Lake water entering street #4 near temple.',
-            lat: 10.9915,
-            lng: 76.9638,
+            text: 'Duplicate alert: Musi flood water entering lane #4 near riverside temple.',
+            lat: 17.362,
+            lng: 78.475,
             category: 'flood',
             verified: true,
             isRumour: false,
@@ -171,10 +171,10 @@ class RealtimeClient {
           timestamp: new Date().toISOString(),
           data: {
             id: 'SENS-NOYYAL-01',
-            name: 'Perur Causeway River Level Gauge',
+            name: 'Bhadrachalam Godavari River Gauge',
             type: 'river_gauge',
             wardId: 'ZONE_PERUR',
-            wardName: 'Ward 72 - Perur',
+            wardName: 'Sector 23 - Warangal Waddepally',
             currentValue: 5.1, // Rising past 5m!
             unit: 'meters depth',
             warningThreshold: 3.5,
@@ -292,23 +292,23 @@ class RealtimeClient {
   // INJECTION CONTROLS (SIMULATION)
   // ==========================================
   public triggerBridgeClosure() {
-    // 1. Close the Perur Noyyal River Bridge
+    // 1. Close the Musi River Corridor Bridge (BR-PERUR-01)
     const closedBridge = {
       id: 'BR-PERUR-01',
-      name: 'Perur Noyyal River Bridge (Key Corridor)',
-      startCoord: [10.972, 76.918] as [number, number],
-      endCoord: [10.968, 76.912] as [number, number],
+      name: 'Puranapul Musi River Bridge (BR-PERUR-01)',
+      startCoord: [17.364, 78.468] as [number, number],
+      endCoord: [17.368, 78.472] as [number, number],
       polyline: [
-        [10.972, 76.918] as [number, number],
-        [10.970, 76.915] as [number, number],
-        [10.968, 76.912] as [number, number],
+        [17.364, 78.468] as [number, number],
+        [17.366, 78.470] as [number, number],
+        [17.368, 78.472] as [number, number],
       ],
       status: 'closed' as const,
       waterDepthCm: 95,
       tier: 'T1' as const,
       reliability: 0.98,
       lastVerified: new Date().toISOString(),
-      closureReason: 'Noyyal flood water overtopping roadway by 0.95m; structural safety threshold breached.',
+      closureReason: 'Musi flood water overtopping roadway by 0.95m; structural safety threshold breached.',
       isBridge: true,
       alternativeRouteId: 'ROAD-SUNDARAPURAM-LINK',
     };
@@ -323,21 +323,21 @@ class RealtimeClient {
     // IMPORTANT: Shows ONLY affected assignments, leaving untouched assignments unchanged!
     const diff = {
       id: `DIFF-${Date.now()}`,
-      triggerEvent: 'Bridge Closure: Perur Noyyal River Bridge (BR-PERUR-01) submerged',
+      triggerEvent: 'Bridge Closure: Puranapul Musi River Bridge (BR-PERUR-01) submerged',
       timestamp: new Date().toISOString(),
       totalAssignmentsCount: 4,
       unaffectedAssignmentsCount: 3,
       affectedItems: [
         {
           assignmentId: 'ASGN-PROPOSED-01',
-          unitCallsign: 'Fire & Rescue High-Clearance 2',
-          wardName: 'Ward 72 - Perur Temple Lowland',
+          unitCallsign: 'TG Fire & Rescue High-Clearance 2',
+          wardName: 'Sector 23 - Warangal Waddepally',
           reason: 'Rerouted' as const,
           oldEtaMinutes: 16,
           newEtaMinutes: 31,
-          oldTarget: 'Direct corridor via Perur Bridge',
-          newTarget: 'Detour via Sundarapuram Bypass Link',
-          explanation: 'Perur Bridge closed. Rerouted via southern bypass. ETA increased by 15 mins (+93%).',
+          oldTarget: 'Direct corridor via Musi Bridge',
+          newTarget: 'Detour via South Ring Bypass Link',
+          explanation: 'Puranapul Musi Bridge closed. Rerouted via South Ring bypass. ETA increased by 15 mins (+93%).',
           affectedEdge: 'BR-PERUR-01',
           approved: false,
         },
@@ -362,7 +362,7 @@ class RealtimeClient {
         type: 'BRIDGE_CLOSED_REPLAN',
         actor: 'Autonomous Replanner',
         entity: 'BR-PERUR-01',
-        summary: 'Perur Bridge closed due to 0.95m flood overtopping. Generated Replan Diff for 1 affected unit (3 units unaffected).',
+        summary: 'Puranapul Musi Bridge closed due to 0.95m flood overtopping. Generated Replan Diff for 1 affected unit (3 units unaffected).',
         reliability: 0.98,
       },
     });
@@ -374,9 +374,9 @@ class RealtimeClient {
       timestamp: new Date().toISOString(),
       data: {
         id: 'SHELTER-01',
-        name: 'Government Arts College Relief Camp',
-        lat: 11.001,
-        lng: 76.972,
+        name: 'Government City College Relief Camp (Hyderabad)',
+        lat: 17.368,
+        lng: 78.471,
         capacity: 600,
         currentOccupancy: 600, // 100% capacity!
         foodKitsAvailable: 420,
@@ -386,7 +386,7 @@ class RealtimeClient {
         tier: 'T1',
         reliability: 0.99,
         lastUpdated: new Date().toISOString(),
-        contactPhone: '+91 422 230 1122',
+        contactPhone: '+91 40 2345 1122',
       },
     });
   }
@@ -397,10 +397,10 @@ class RealtimeClient {
       timestamp: new Date().toISOString(),
       data: {
         id: 'SENS-SINGANALLUR-FLOW',
-        name: 'Singanallur Sluice Flow Telemeter',
+        name: 'Bhadrachalam Sluice Flow Telemeter',
         type: 'drainage_flow',
         wardId: 'ZONE_SINGANALLUR',
-        wardName: 'Ward 58 - Singanallur',
+        wardName: 'Sector 08 - Bhadrachalam',
         currentValue: 999.0,
         unit: 'cusecs',
         warningThreshold: 500,

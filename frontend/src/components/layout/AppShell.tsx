@@ -27,12 +27,12 @@ import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/store/useUiStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRealtimeStore } from '@/store/useRealtimeStore';
-import { SimulationControls } from '@/components/common/SimulationControls';
-import { ConnectionBanner } from '@/components/common/ConnectionBanner';
-import { DispatchQueueDrawer } from '@/components/common/DispatchQueueDrawer';
-import { DecisionCardModal } from '@/components/common/DecisionCardModal';
-import { ReplanDiffModal } from '@/components/common/ReplanDiffModal';
-import { CommandPalette } from '@/components/common/CommandPalette';
+import { ConnectionBanner } from '@/comp/common/ConnectionBanner';
+
+import { DispatchQueueDrawer } from '@/comp/common/DispatchQueueDrawer';
+import { DecisionCardModal } from '@/comp/common/DecisionCardModal';
+import { ReplanDiffModal } from '@/comp/common/ReplanDiffModal';
+import { CommandPalette } from '@/comp/common/CommandPalette';
 import { useQuery } from '@tanstack/react-query';
 import { mockApi } from '@/lib/api';
 
@@ -72,12 +72,12 @@ export const AppShell: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-black text-slate-800 dark:text-slate-100 transition-colors">
       {/* Connection & Network Drop Banner */}
       <ConnectionBanner />
 
       {/* Top Header Bar */}
-      <header className="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-30 px-4 flex items-center justify-between gap-3">
+      <header className="h-14 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-black/90 backdrop-blur-md sticky top-0 z-30 px-4 flex items-center justify-between gap-3">
         {/* Left: Brand */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2">
@@ -98,16 +98,12 @@ export const AppShell: React.FC = () => {
           >
             <Search className="w-3.5 h-3.5" />
             <span>Search commands or wards...</span>
-            <kbd className="text-[10px] bg-white dark:bg-slate-900 px-1 py-0.5 rounded border border-slate-200 dark:border-slate-700 font-mono">
+            <kbd className="text-[10px] bg-white dark:bg-black px-1 py-0.5 rounded border border-slate-200 dark:border-slate-700 font-mono">
               ⌘K
             </kbd>
           </button>
         </div>
 
-        {/* Center: Realtime Simulation Controls */}
-        <div className="hidden lg:block">
-          <SimulationControls />
-        </div>
 
         {/* Right: Actions, Language, Role Selector, User Menu */}
         <div className="flex items-center gap-2">
@@ -155,7 +151,7 @@ export const AppShell: React.FC = () => {
         <aside
           className={`${
             sidebarCollapsed ? 'w-16' : 'w-56'
-          } border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between transition-all duration-200 select-none z-20`}
+          } border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-black flex flex-col justify-between transition-all duration-200 select-none z-20`}
         >
           {/* Navigation Links */}
           <div className="p-2 space-y-1 overflow-y-auto">
@@ -203,7 +199,7 @@ export const AppShell: React.FC = () => {
         </aside>
 
         {/* Page Outlet */}
-        <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-4 md:p-6">
+        <main className="flex-1 overflow-y-auto bg-slate-50 dark:bg-black p-4 md:p-6">
           <Outlet />
         </main>
       </div>

@@ -20,9 +20,9 @@ import {
   ReferenceLine,
 } from 'recharts';
 import { mockApi } from '@/lib/api';
-import { TierBadge } from '@/components/common/TierBadge';
-import { ReliabilityBar } from '@/components/common/ReliabilityBar';
-import { StaleBadge } from '@/components/common/StaleBadge';
+import { TierBadge } from '@/comp/common/TierBadge';
+import { ReliabilityBar } from '@/comp/common/ReliabilityBar';
+import { StaleBadge } from '@/comp/common/StaleBadge';
 
 export const WeatherPage: React.FC = () => {
   const { data: alerts = [] } = useQuery({ queryKey: ['weatherAlerts'], queryFn: mockApi.getWeatherAlerts });
@@ -80,7 +80,7 @@ export const WeatherPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* River Gauge Chart */}
         {riverSensor && (
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-sm text-slate-900 dark:text-white">{riverSensor.name}</h3>
@@ -125,7 +125,7 @@ export const WeatherPage: React.FC = () => {
 
         {/* Rain Gauge Chart */}
         {rainSensor && (
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-sm text-slate-900 dark:text-white">{rainSensor.name}</h3>
@@ -164,7 +164,7 @@ export const WeatherPage: React.FC = () => {
       </div>
 
       {/* Sensor Reading Table */}
-      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs">
+      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-black shadow-xs">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
             <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 font-semibold uppercase tracking-wider">

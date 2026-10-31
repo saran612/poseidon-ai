@@ -16,7 +16,7 @@ import { mockApi } from '@/lib/api';
 import { realtimeClient } from '@/lib/realtime';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRealtimeStore } from '@/store/useRealtimeStore';
-import { PriorityBandChip } from '@/components/common/PriorityBandChip';
+import { PriorityBandChip } from '@/comp/common/PriorityBandChip';
 import type { Assignment } from '@/types';
 
 export const RoutingPage: React.FC = () => {
@@ -81,9 +81,9 @@ export const RoutingPage: React.FC = () => {
           <div className="flex items-start gap-2.5">
             <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <span className="font-bold text-sm block">CRITICAL CORRIDOR BREACH: Perur Bridge Closed</span>
+              <span className="font-bold text-sm block">CRITICAL CORRIDOR BREACH: Musi Corridor Bridge Closed</span>
               <p>
-                Flood waters reached 0.95m overtopping Perur Noyyal River Bridge (BR-PERUR-01). All units
+                Cyclone Arnab flood waters reached 0.95m overtopping Puranapul Musi River Bridge (BR-PERUR-01). All units
                 utilizing this artery have been isolated and queued for rerouting approval.
               </p>
             </div>
@@ -116,8 +116,8 @@ export const RoutingPage: React.FC = () => {
                 }}
                 className={`p-3 rounded-xl border text-xs cursor-pointer transition-all ${
                   selectedAsgnId === asgn.id
-                    ? 'border-blue-500 bg-white dark:bg-slate-900 shadow-xs ring-2 ring-blue-500/20'
-                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
+                    ? 'border-blue-500 bg-white dark:bg-black shadow-xs ring-2 ring-blue-500/20'
+                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-black'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -137,7 +137,7 @@ export const RoutingPage: React.FC = () => {
         {/* Center & Right: Selected Route Details & Edit Mode */}
         <div className="lg:col-span-2 space-y-6">
           {selectedAsgn && (
-            <div className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4 text-xs">
+            <div className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-4 text-xs">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div>
                   <h3 className="font-bold text-base text-slate-900 dark:text-white">

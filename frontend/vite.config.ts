@@ -22,4 +22,11 @@ export default defineConfig({
       },
     },
   },
+  // @ts-ignore
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    exclude: ['**/node_modules/**', '**/e2e/**', '**/dist/**'],
+  },
 })
+
