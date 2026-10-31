@@ -76,3 +76,4 @@ Run the full automated test suite covering all mandatory test cases:
 pytest -v
 ```
 All 24 test cases execute in $< 1.0\text{s}$ verifying cryptographic authentication, replay protection, transport deduplication, fairness floors, and replanning diffs.
+

@@ -93,3 +93,4 @@ Powered by Google OR-Tools CP-SAT (`ReliefResourceOptimizer`):
 - Cascading analyzer identifies affected relief teams and triggers OR-Tools re-optimization.
 - Generates versioned revised plans ($v1 \to v2$) with structural diff (cancelled, rerouted, new dispatches).
 - **Human-In-The-Loop Sign-off**: Plan $v2$ remains strictly held in `PENDING_APPROVAL` status until an authorized operator issues operational sign-off.
+

@@ -1,12 +1,8 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -26,35 +22,56 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Virtual environments
-.env
-.venv
+# Virtual Environments
+.venv/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
 
-# SQLite / Database
+# Environment Variables & Secrets (Keep .env.example tracked)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Databases & Runtime State
 *.sqlite3
 *.db
 *.sqlite
+poseidon.db
+*.db-journal
 
 # Testing & Coverage
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
+.nox/
+.tox/
 
-# Node / Frontend
+# Node & Frontend Build Artifacts
 node_modules/
-dist/
+ui/node_modules/
+ui/dist/
 .vite/
+ui/.vite/
 
-# IDE & OS
+# Logs & Debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE & Operating System
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-project
+*.sublime-workspace
 .DS_Store
 Thumbs.db
-
+desktop.ini
