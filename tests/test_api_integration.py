@@ -54,3 +54,107 @@ async def test_api_full_20_step_demo_scenario(client: AsyncClient):
     assert step20["step"] == 20
     assert "t_ingested_avg_ms" in step20["processing_metrics"]
 
+
+@pytest.mark.asyncio
+async def test_api_gis_network_and_replanning_lifecycle(client: AsyncClient):
+    """Verify GIS network layers, bridge cut cascading impact, and approval workflow."""
+    # 1. Fetch GIS infrastructure network
+    net_resp = await client.get("/api/v1/situation/network")
+    assert net_resp.status_code == 200
+    net_data = net_resp.json()
+    assert len(net_data["depots"]) == 2
+    assert len(net_data["shelters"]) == 2
+    assert len(net_data["noyyal_river"]) >= 10
+    assert len(net_data["edges"]) >= 8
+
+    # 2. Simulate bridge closure
+    close_resp = await client.post(
+        "/api/v1/replanning/close-bridge",
+        json={
+            "plan_id": "PLAN-OPERATIONAL-01",
+            "bridge_id": "BR-UKKADAM-01",
+            "closure_reason": "Overflow depth 1.2m at Sungam bypass",
+            "operator_role": "FIELD_COMMANDER",
+        },
+    )
+    assert close_resp.status_code == 200
+    close_data = close_resp.json()
+    assert close_data["status"] == "PENDING_APPROVAL"
+    assert close_data["requires_human_approval"] is True
+    assert "comparison" in close_data
+
+    # 3. Approve revised plan version
+    app_resp = await client.post(
+        "/api/v1/replanning/approve",
+        json={
+            "plan_id": "PLAN-OPERATIONAL-01",
+            "version_number": close_data["revised_version"],
+            "operator_id": "DISTRICT_COLLECTOR_CBE",
+        },
+    )
+    assert app_resp.status_code == 200
+    assert app_resp.json()["status"] == "APPROVED"
+
+    # 4. Reopen bridge
+    reopen_resp = await client.post(
+        "/api/v1/replanning/reopen-bridge",
+        json={
+            "bridge_id": "BR-UKKADAM-01",
+            "plan_id": "PLAN-OPERATIONAL-01",
+        },
+    )
+    assert reopen_resp.status_code == 200
+    assert reopen_resp.json()["status"] == "REOPENED"
+
+
+@pytest.mark.asyncio
+async def test_api_mobile_auth_and_assignments(client: AsyncClient):
+    """Verify field mobile authentication and assignment acknowledgement workflow."""
+    # 1. Login with valid T1 Officer credentials
+    login_resp = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "device_code": "DEV-OFFICER-PERUR",
+            "secret_key": "poseidon-field-officer-key-32b!",
+        },
+    )
+    assert login_resp.status_code == 200
+    auth_data = login_resp.json()
+    assert auth_data["device_code"] == "DEV-OFFICER-PERUR"
+    assert auth_data["is_field_officer"] is True
+    assert auth_data["role"] == "T1"
+    assert "token" in auth_data
+
+    # 2. Login with invalid credentials rejects with 401
+    bad_login = await client.post(
+        "/api/v1/auth/login",
+        json={
+            "device_code": "DEV-OFFICER-PERUR",
+            "secret_key": "wrong-secret-key",
+        },
+    )
+    assert bad_login.status_code == 401
+
+    # 3. Retrieve operational assignments
+    asgn_resp = await client.get("/api/v1/assignments")
+    assert asgn_resp.status_code == 200
+    assignments = asgn_resp.json()["assignments"]
+    assert len(assignments) >= 1
+    asgn_id = assignments[0]["assignment_id"]
+
+    # 4. Responder acknowledges assignment
+    ack_resp = await client.post(
+        f"/api/v1/assignments/{asgn_id}/acknowledge",
+        json={
+            "device_id": "DEV-OFFICER-PERUR",
+            "status": "ACCEPTED",
+            "transport": "WIFI",
+            "notes": "Unit dispatched to Perur bridgehead.",
+        },
+    )
+    assert ack_resp.status_code == 200
+    ack_data = ack_resp.json()
+    assert ack_data["status"] == "ACKNOWLEDGED"
+    assert ack_data["current_status"] == "ACCEPTED"
+
+
