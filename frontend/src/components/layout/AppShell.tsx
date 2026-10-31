@@ -21,11 +21,8 @@ import {
   ChevronRight,
   Shield,
   Radio,
-<<<<<<< Updated upstream
-  BrainCircuit,
-=======
+BrainCircuit,
   Smartphone,
->>>>>>> Stashed changes
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/store/useUiStore';
