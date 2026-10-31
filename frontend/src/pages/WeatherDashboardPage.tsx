@@ -71,10 +71,10 @@ export const WeatherDashboardPage: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                 <h3 className="font-bold text-sm text-slate-900 dark:text-white">
-                  Windy Live Doppler Radar & Convective Cloud Tracking
+                  Zoom Earth Live Precipitation & GFS Model Map
                 </h3>
                 <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-mono text-[10px] font-bold">
-                  LAT 13.08° N, LON 80.27° E
+                  VIEW: 10.332° N, 78.417° E (6z)
                 </span>
               </div>
 
@@ -94,30 +94,31 @@ export const WeatherDashboardPage: React.FC = () => {
                   )}
                 </button>
                 <a
-                  href="https://www.windy.com"
+                  href="https://zoom.earth/maps/precipitation/#view=10.332,78.417,6z/model=gfs/date=2026-10-31,13:50,+5.5"
                   target="_blank"
                   rel="noreferrer"
                   className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                  title="Open source satellite"
+                  title="Open in Zoom Earth"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
             </div>
 
-            {/* Embedded Windy Radar Frame */}
+            {/* Embedded Live Weather Map (Zoom Earth Precipitation Model) */}
             <div
               className={`w-full rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-inner bg-slate-950 transition-all ${
                 fullscreenRadar ? 'h-[750px]' : 'h-[600px]'
               }`}
             >
               <iframe
-                title="Live Weather Radar Stream"
+                title="Live Weather Precipitation Radar"
                 width="100%"
                 height="100%"
-                src="https://embed.windy.com/embed2.html?lat=13.08&lon=80.27&zoom=6&level=surface&overlay=radar&product=radar&menu=&message=&marker=&calendar=now&type=map&location=coordinates&detail=&metricWind=default&metricTemp=default"
+                src="https://zoom.earth/maps/precipitation/#view=10.332,78.417,6z/model=gfs/date=2026-10-31,13:50,+5.5"
                 frameBorder="0"
                 className="w-full h-full"
+                allowFullScreen
               />
             </div>
 
