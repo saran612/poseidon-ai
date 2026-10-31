@@ -16,7 +16,15 @@ export const TierDescription: Record<ReliabilityTier, { label: string; desc: str
 // ==========================================
 // USER & AUTH
 // ==========================================
-export const UserRoleSchema = z.enum(['Viewer', 'Operator', 'Supervisor']);
+export const UserRoleSchema = z.enum([
+  'Viewer',
+  'Operator',
+  'Supervisor',
+  'Public',
+  'NGO',
+  'Police',
+  'Hospital',
+]);
 export type UserRole = z.infer<typeof UserRoleSchema>;
 
 export const UserSchema = z.object({

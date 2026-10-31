@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AppShell } from '@/components/layout/AppShell';
+import { MobileShell } from '@/components/layout/MobileShell';
 import { OverviewPage } from '@/pages/OverviewPage';
 import { MapPage } from '@/pages/MapPage';
 import { PrioritiesPage } from '@/pages/PrioritiesPage';
@@ -15,6 +16,12 @@ import { AnalyticsPage } from '@/pages/AnalyticsPage';
 import { MlIntelligencePage } from '@/pages/MlIntelligencePage';
 import { LogsPage } from '@/pages/LogsPage';
 import { SettingsPage } from '@/pages/SettingsPage';
+import { MobilePortalWrapper } from '@/pages/MobilePortalPage';
+import { MobileLoginPage } from '@/pages/mobile/MobileLoginPage';
+import { MobilePublicPortal } from '@/pages/mobile/MobilePublicPortal';
+import { MobileNGOPortal } from '@/pages/mobile/MobileNGOPortal';
+import { MobilePolicePortal } from '@/pages/mobile/MobilePolicePortal';
+import { MobileHospitalPortal } from '@/pages/mobile/MobileHospitalPortal';
 import { realtimeClient } from '@/lib/realtime';
 
 // Initialize TanStack Query Client
@@ -42,6 +49,19 @@ export const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
+          {/* Standalone Mobile Login & Gateway */}
+          <Route path="/m/login" element={<MobileLoginPage />} />
+
+          {/* Standalone Mobile Portal (Dedicated mobile shell with bottom dock) */}
+          <Route path="/m" element={<MobileShell />}>
+            <Route index element={<MobilePortalWrapper />} />
+            <Route path="public" element={<MobilePublicPortal />} />
+            <Route path="ngo" element={<MobileNGOPortal />} />
+            <Route path="police" element={<MobilePolicePortal />} />
+            <Route path="hospital" element={<MobileHospitalPortal />} />
+          </Route>
+
+          {/* Desktop Web Command Shell */}
           <Route path="/" element={<AppShell />}>
             <Route index element={<OverviewPage />} />
             <Route path="map" element={<MapPage />} />

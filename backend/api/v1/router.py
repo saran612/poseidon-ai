@@ -10,6 +10,7 @@ from backend.api.v1.endpoints import (
     auth,
     assignments,
     ws,
+    external,
     map as map_endpoints,
     ml,
 )
@@ -26,4 +27,5 @@ api_router.include_router(relief.router, tags=["Relief Optimization"])
 api_router.include_router(replanning.router, tags=["Cascading Replanning"])
 api_router.include_router(simulation.router, tags=["Demonstration & Simulation"])
 api_router.include_router(assignments.router, tags=["Rescue Assignments"])
+api_router.include_router(external.router, tags=["External Disaster Feeds & Facilities"])
 api_router.include_router(ws.router, tags=["WebSockets Real-Time"])

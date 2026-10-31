@@ -138,7 +138,33 @@ class AppDatabase extends _$AppDatabase {
 
   static LazyDatabase _openConnection() {
     return LazyDatabase(() async {
-      final dbFolder = await getApplicationDocumentsDirectory();
+      Directory dbFolder;
+      try {
+        dbFolder = await getApplicationSupportDirectory();
+      } catch (_) {
+        try {
+          dbFolder = await getApplicationDocumentsDirectory();
+        } catch (_) {
+          final localAppData = Platform.environment['LOCALAPPDATA'] ?? Platform.environment['APPDATA'];
+          if (localAppData != null) {
+            dbFolder = Directory(p.join(localAppData, 'poseidon_mobile'));
+          } else {
+            dbFolder = await getTemporaryDirectory();
+          }
+        }
+      }
+
+      // SQLite on Windows can fail with code 14 (SQLITE_CANTOPEN) on OneDrive redirected folders or non-ASCII paths
+      if (Platform.isWindows) {
+        final localAppData = Platform.environment['LOCALAPPDATA'] ?? Platform.environment['APPDATA'];
+        if (localAppData != null && (dbFolder.path.contains('OneDrive') || dbFolder.path.codeUnits.any((c) => c > 127))) {
+          dbFolder = Directory(p.join(localAppData, 'poseidon_mobile'));
+        }
+      }
+
+      if (!await dbFolder.exists()) {
+        await dbFolder.create(recursive: true);
+      }
       final file = File(p.join(dbFolder.path, 'poseidon_offline.sqlite'));
       return NativeDatabase.createInBackground(file);
     });

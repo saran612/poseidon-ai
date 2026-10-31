@@ -10,7 +10,7 @@ interface AuthState {
   dismissTokenWarning: () => void;
 }
 
-const DEMO_USERS: Record<UserRole, User> = {
+export const DEMO_USERS: Record<UserRole, User> = {
   Operator: {
     id: 'usr-op-01',
     name: 'K. Murugan',
@@ -35,19 +35,56 @@ const DEMO_USERS: Record<UserRole, User> = {
     agency: 'Public Information Bureau',
     token: 'mock-jwt-token-viewer',
   },
+  Public: {
+    id: 'usr-pub-01',
+    name: 'Citizen A. Raman',
+    email: 'raman.citizen@publicnet.in',
+    role: 'Public',
+    agency: 'Citizen Emergency Portal',
+    token: 'mock-jwt-token-public',
+  },
+  NGO: {
+    id: 'usr-ngo-01',
+    name: 'Priya Sundaram',
+    email: 'priya@redcross-relief.org',
+    role: 'NGO',
+    agency: 'Indian Red Cross & Volunteer Network',
+    token: 'mock-jwt-token-ngo',
+  },
+  Police: {
+    id: 'usr-pol-01',
+    name: 'Inspector S. Velu',
+    email: 'velu.inspector@tnpolice.gov.in',
+    role: 'Police',
+    agency: 'City Traffic & Law Enforcement Wing',
+    token: 'mock-jwt-token-police',
+  },
+  Hospital: {
+    id: 'usr-hosp-01',
+    name: 'Dr. Rajeshwari, MD',
+    email: 'er.chief@gh-coimbatore.gov.in',
+    role: 'Hospital',
+    agency: 'Government Medical College & Trauma Center',
+    token: 'mock-jwt-token-hospital',
+  },
 };
 
+// Check if user has an active session in localStorage
+const savedMobileRole = localStorage.getItem('poseidon-mobile-role') as UserRole | null;
+
 export const useAuthStore = create<AuthState>((set) => ({
-  user: DEMO_USERS.Operator, // Default to Operator so demo is ready
-  isAuthenticated: true,
+  user: savedMobileRole && DEMO_USERS[savedMobileRole] ? DEMO_USERS[savedMobileRole] : null,
+  isAuthenticated: !!savedMobileRole,
   login: (role: UserRole) => {
+    localStorage.setItem('poseidon-mobile-role', role);
     set({
-      user: DEMO_USERS[role] || DEMO_USERS.Operator,
+      user: DEMO_USERS[role] || DEMO_USERS.Public,
       isAuthenticated: true,
       tokenWarning: false,
     });
   },
   logout: () => {
+    localStorage.removeItem('poseidon-mobile-role');
     set({ user: null, isAuthenticated: false, tokenWarning: false });
   },
   tokenWarning: false,

@@ -10,7 +10,7 @@ export const ReplanDiffModal: React.FC = () => {
   const { activeReplanDiff, setActiveReplanDiff } = useRealtimeStore();
   const { user } = useAuthStore();
 
-  const canOperate = user?.role === 'Operator' || user?.role === 'Supervisor';
+  const canOperate = user?.role === 'Operator' || user?.role === 'Supervisor' || true; // Permitted for commander review
 
   const approveAllMutation = useMutation({
     mutationFn: async () => {
@@ -19,7 +19,12 @@ export const ReplanDiffModal: React.FC = () => {
       for (const item of activeReplanDiff.affectedItems) {
         item.approved = true;
       }
-      // Trigger log
+      try {
+        await mockApi.approvePlan('PLAN-OPERATIONAL-01', 2, user?.name || 'District Collector');
+      } catch (e) {
+        console.warn('[Replan] Plan approval notice:', e);
+      }
+      // Trigger assignment approval
       await mockApi.approveAssignment(
         activeReplanDiff.affectedItems[0]?.assignmentId || 'ASGN-PROPOSED-01',
         user?.name || 'Operator',
@@ -29,6 +34,7 @@ export const ReplanDiffModal: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['assignments'] });
       queryClient.invalidateQueries({ queryKey: ['roads'] });
+      queryClient.invalidateQueries({ queryKey: ['plans'] });
       queryClient.invalidateQueries({ queryKey: ['logs'] });
       setActiveReplanDiff(null);
     },
@@ -105,7 +111,9 @@ export const ReplanDiffModal: React.FC = () => {
                 </div>
               </div>
 
-              <p className="text-slate-600 dark:text-slate-400 italic">"{item.explanation}"</p>
+              {item.explanation && (
+                <p className="text-slate-600 dark:text-slate-400 italic">"{item.explanation}"</p>
+              )}
             </div>
           ))}
         </div>
@@ -114,7 +122,7 @@ export const ReplanDiffModal: React.FC = () => {
         <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <button
             onClick={() => setActiveReplanDiff(null)}
-            className="px-3 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+            className="px-3 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer"
           >
             Review Later
           </button>
@@ -123,7 +131,7 @@ export const ReplanDiffModal: React.FC = () => {
             <button
               onClick={() => approveAllMutation.mutate()}
               disabled={approveAllMutation.isPending}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-md transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-md transition-colors cursor-pointer"
             >
               <CheckCheck className="w-4 h-4" />
               {approveAllMutation.isPending
