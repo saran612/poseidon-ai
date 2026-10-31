@@ -1,0 +1,13 @@
+observation_id,station_id,station_name,district,latitude,longitude,period_start_utc,period_end_utc,rainfall_mm,measurement_type,source_id,data_status,notes
+RN001,IMD_43187,Narsapur,West Godavari,16.43,81.7,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,245.8,observed_gauge,SRC01,REAL,Extremely heavy rainfall during cyclone landfall; IMD automatic rain gauge.
+RN002,IMD_43189,Kakinada,Kakinada,16.98,82.24,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,218.4,observed_gauge,SRC01,REAL,Extremely heavy rainfall recorded over 24-hr period ending 0830 IST 28 Oct.
+RN003,IMD_YAN01,Yanam Town,Yanam (Puducherry),16.73,82.22,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,232.0,observed_gauge,SRC01,REAL,Heavy core band deluge in enclave town adjacent to Godavari estuary.
+RN004,IMD_AML01,Amalapuram,Dr. B.R. Ambedkar Konaseema,16.58,82.01,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,264.5,observed_gauge,SRC03,REAL,Highest 24-hr rainfall in Konaseema district; intense waterlogging in delta mandals.
+RN005,IMD_RZL01,Razole,Dr. B.R. Ambedkar Konaseema,16.48,81.83,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,225.2,observed_gauge,SRC03,REAL,Island mandal experiencing severe tidal swell and heavy downpour.
+RN006,IMD_43185,Machilipatnam,Krishna,16.19,81.14,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,176.4,observed_gauge,SRC01,REAL,Very heavy rainfall recorded; coastal drainage canals overwhelmed.
+RN007,IMD_43220,Bapatla,Bapatla,15.9,80.47,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,142.6,observed_gauge,SRC01,REAL,Southern perimeter heavy rain; agricultural fields inundated.
+RN008,IMD_43149,Visakhapatnam AP,Visakhapatnam,17.72,83.22,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,138.2,observed_gauge,SRC01,REAL,Continuous rain squalls; port and airport weather radar observations.
+RN009,IMD_RJY01,Rajahmundry,East Godavari,17.0,81.78,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,188.5,observed_gauge,SRC03,REAL,Heavy inflow into Godavari river basin.
+RN010,IMD_TNI01,Tuni,Kakinada,17.35,82.55,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,165.0,observed_gauge,SRC01,REAL,Foothill catchment runoff towards Tandava reservoir.
+RN011,IMD_VJA01,Vijayawada (Gannavaram),Krishna,16.53,80.8,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,122.4,observed_gauge,SRC01,REAL,Heavy urban rain; Budameru rivulet monitoring activated.
+RN012,IMD_43049,Gopalpur,Ganjam (Odisha),19.26,84.91,2026-10-27T03:00:00Z,2026-10-28T03:00:00Z,94.6,observed_gauge,SRC01,REAL,South Odisha coastal gauge recording peripheral rain band.

@@ -13,12 +13,12 @@ import {
   Send,
 } from 'lucide-react';
 import { mockApi } from '@/lib/api';
-import { KpiCard } from '@/components/common/KpiCard';
-import { PriorityBandChip } from '@/components/common/PriorityBandChip';
-import { ReliabilityBar } from '@/components/common/ReliabilityBar';
-import { TierBadge } from '@/components/common/TierBadge';
-import { StaleBadge } from '@/components/common/StaleBadge';
-import { AssignmentCard } from '@/components/common/AssignmentCard';
+import { KpiCard } from '@/comp/common/KpiCard';
+import { PriorityBandChip } from '@/comp/common/PriorityBandChip';
+import { ReliabilityBar } from '@/comp/common/ReliabilityBar';
+import { TierBadge } from '@/comp/common/TierBadge';
+import { StaleBadge } from '@/comp/common/StaleBadge';
+import { AssignmentCard } from '@/comp/common/AssignmentCard';
 import { useUiStore } from '@/store/useUiStore';
 import { useRealtimeStore } from '@/store/useRealtimeStore';
 
@@ -54,8 +54,9 @@ export const OverviewPage: React.FC = () => {
             Operational Overview & Dispatch Coordination
           </h1>
           <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Real-time multi-agency situational intelligence across Coimbatore Urban Corridor
+            Real-time multi-agency situational intelligence across Cyclone Arnab Impacted Vijayawada Krishna River Basin
           </p>
+
         </div>
 
         <div className="flex items-center gap-2">
@@ -122,7 +123,7 @@ export const OverviewPage: React.FC = () => {
         {/* Left 2 Cols: Top 5 Priority Areas & Pending Approvals */}
         <div className="lg:col-span-2 space-y-6">
           {/* Top Priority Areas */}
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ShieldAlert className="w-4 h-4 text-rose-500" />
@@ -175,7 +176,7 @@ export const OverviewPage: React.FC = () => {
           </div>
 
           {/* Pending Dispatches Waiting Human Approval */}
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -200,7 +201,7 @@ export const OverviewPage: React.FC = () => {
 
         {/* Right Col: Live Event & Alert Stream */}
         <div className="space-y-6">
-          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+          <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Radio className="w-4 h-4 text-blue-500 animate-pulse" />

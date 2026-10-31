@@ -12,11 +12,11 @@ import {
   Radio,
 } from 'lucide-react';
 import { mockApi } from '@/lib/api';
-import { PriorityBandChip } from '@/components/common/PriorityBandChip';
-import { FactorBars } from '@/components/common/FactorBars';
-import { ReliabilityBar } from '@/components/common/ReliabilityBar';
-import { TierBadge } from '@/components/common/TierBadge';
-import { StaleBadge } from '@/components/common/StaleBadge';
+import { PriorityBandChip } from '@/comp/common/PriorityBandChip';
+import { FactorBars } from '@/comp/common/FactorBars';
+import { ReliabilityBar } from '@/comp/common/ReliabilityBar';
+import { TierBadge } from '@/comp/common/TierBadge';
+import { StaleBadge } from '@/comp/common/StaleBadge';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useUiStore } from '@/store/useUiStore';
 import type { PriorityWeights } from '@/types';
@@ -93,7 +93,7 @@ export const PrioritiesPage: React.FC = () => {
       </div>
 
       {/* Supervisor Weight Adjustment Panel */}
-      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-4">
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -165,7 +165,7 @@ export const PrioritiesPage: React.FC = () => {
       </div>
 
       {/* Ranked Table */}
-      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs">
+      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-black shadow-xs">
         <table className="w-full text-left border-collapse text-xs">
           <thead>
             <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 font-semibold uppercase tracking-wider">
@@ -245,7 +245,7 @@ export const PrioritiesPage: React.FC = () => {
 
                   {/* Expanded Row with Factor Breakdown */}
                   {isExpanded && (
-                    <tr className="bg-slate-50/50 dark:bg-slate-900/40">
+                    <tr className="bg-slate-50/50 dark:bg-black/40">
                       <td colSpan={10} className="p-4 border-t border-slate-100 dark:border-slate-800">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>

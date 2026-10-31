@@ -11,8 +11,8 @@ import {
 } from 'lucide-react';
 import { mockApi } from '@/lib/api';
 import { useUiStore } from '@/store/useUiStore';
-import { TierBadge } from '@/components/common/TierBadge';
-import { ReliabilityBar } from '@/components/common/ReliabilityBar';
+import { TierBadge } from '@/comp/common/TierBadge';
+import { ReliabilityBar } from '@/comp/common/ReliabilityBar';
 import { INITIAL_DECISIONS } from '@/mock/seedData';
 
 export const DecisionsPage: React.FC = () => {
@@ -52,14 +52,14 @@ export const DecisionsPage: React.FC = () => {
               placeholder="Search decisions or wards..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs w-56"
+              className="pl-8 pr-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-black text-xs w-56"
             />
           </div>
 
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs"
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-black text-xs"
           >
             <option value="ALL">All Types</option>
             <option value="priority">Priority Area</option>
@@ -76,7 +76,7 @@ export const DecisionsPage: React.FC = () => {
           <div
             key={dec.id}
             onClick={() => openDecisionCard(dec.id)}
-            className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-blue-500 cursor-pointer shadow-xs transition-all space-y-3 group"
+            className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black hover:border-blue-500 cursor-pointer shadow-xs transition-all space-y-3 group"
           >
             <div className="flex items-center justify-between">
               <span className="px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300 font-bold text-[10px] uppercase">

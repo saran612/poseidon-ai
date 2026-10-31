@@ -1,0 +1,10 @@
+event_name,year,district,houses_damaged,crop_damaged_ha,electric_poles_damaged,boats_damaged,damage_severity_label,source_agency,data_status
+MICHAUNG,2023,Bapatla,3420,42500.0,2150,180,HIGH,APSDMA Post-Disaster Report,REAL
+MICHAUNG,2023,Krishna,2850,38200.0,1820,140,HIGH,APSDMA Post-Disaster Report,REAL
+MICHAUNG,2023,Nellore,5120,61000.0,3800,320,CRITICAL,APSDMA Post-Disaster Report,REAL
+GULAB,2021,Srikakulam,4100,34500.0,2400,210,HIGH,APSDMA Post-Disaster Report,REAL
+GULAB,2021,Vizianagaram,2300,21000.0,1250,60,MODERATE,APSDMA Post-Disaster Report,REAL
+TITLI,2018,Srikakulam,43100,138000.0,28500,2450,CATASTROPHIC,APSDMA Memorandum to Govt of India,REAL
+HUDHUD,2014,Visakhapatnam,89000,182000.0,42000,3800,CATASTROPHIC,GoAP White Paper on Cyclone Hudhud,REAL
+HUDHUD,2014,Vizianagaram,24500,65000.0,11200,420,HIGH,GoAP White Paper on Cyclone Hudhud,REAL
+PHAILIN,2013,Srikakulam,18500,54000.0,7800,850,HIGH,APSDMA Post-Disaster Assessment,REAL

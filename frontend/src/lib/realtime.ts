@@ -121,9 +121,9 @@ class RealtimeClient {
       timestamp: new Date().toISOString(),
       data: {
         id: 'SHELTER-01',
-        name: 'Government Arts College Relief Camp',
-        lat: 11.001,
-        lng: 76.972,
+        name: 'Government City College Relief Camp (Hyderabad)',
+        lat: 17.368,
+        lng: 78.471,
         capacity: 600,
         currentOccupancy: 600,
         foodKitsAvailable: 420,
@@ -133,6 +133,7 @@ class RealtimeClient {
         tier: 'T1',
         reliability: 0.98,
         lastUpdated: new Date().toISOString(),
+        contactPhone: '+91 40 2345 1122',
       },
     });
   }
@@ -143,10 +144,10 @@ class RealtimeClient {
       timestamp: new Date().toISOString(),
       data: {
         id: 'SENS-SINGANALLUR-FLOW',
-        name: 'Singanallur Sluice Flow Telemeter',
+        name: 'Bhadrachalam Sluice Flow Telemeter',
         type: 'drainage_flow',
         wardId: 'ZONE_SINGANALLUR',
-        wardName: 'Ward 58 - Singanallur',
+        wardName: 'Sector 08 - Bhadrachalam',
         currentValue: 999.0,
         unit: 'cusecs',
         warningThreshold: 500,
@@ -160,6 +161,7 @@ class RealtimeClient {
       },
     });
   }
+
   public async triggerBridgeClosure(bridgeId: string = 'BR-PERUR-01', reason: string = '0.95m flood overtopping') {
     try {
       const res = await fetch('/api/v1/replanning/close-bridge', {

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POSEIDON Pitch</title>
+<style>
+:root{
+  --ground:#06090c; --field:#0e1418; --field2:#16202a; --ink:#f3f6f7; --soft:#b9c4ca;
+  --accent:#43d9c9; --accent-ink:#04201d; --warn:#ffb84d;
+  --pad:clamp(20px,4vw,64px);
+  --font:"Helvetica Neue",Inter,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;background:var(--ground)}
+body{font-family:var(--font);color:var(--ink);background:var(--ground);font-size:18px;line-height:1.5;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+section{min-height:100vh;min-height:100svh;scroll-snap-align:start;padding:var(--pad);display:grid;align-content:center;gap:clamp(20px,3vw,40px);position:relative}
+section.alt{background:var(--field)}
+h1,h2{letter-spacing:-.035em;line-height:.98;font-weight:700}
+h1{font-size:clamp(38px,6.4vw,104px);max-width:24ch}
+h2{font-size:clamp(32px,4.4vw,72px);max-width:24ch}
+p{max-width:60ch;color:var(--ink)}
+.lead{font-size:clamp(18px,1.7vw,24px);max-width:48ch}
+.big{font-size:clamp(64px,11vw,176px);font-weight:700;letter-spacing:-.05em;line-height:.9;color:var(--accent)}
+.cap{color:var(--soft);font-size:16px;max-width:44ch}
+.cols{display:grid;gap:clamp(24px,4vw,64px);grid-template-columns:1fr 1fr;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:clamp(12px,2vw,24px)}
+.stat{background:var(--field2);padding:clamp(18px,2vw,32px);display:grid;gap:8px;align-content:start}
+section.alt .stat{background:var(--ground)}
+.stat b{font-size:clamp(40px,5vw,80px);letter-spacing:-.04em;line-height:1;font-weight:700}
+.stat b.a{color:var(--accent)}.stat b.s{font-size:clamp(28px,3vw,48px)}
+.stat span{color:var(--soft);font-size:16px}
+/* bars */
+.bars{display:grid;gap:14px}
+.bar{display:grid;grid-template-columns:minmax(120px,22%) 1fr 64px;align-items:center;gap:16px}
+.bar .t{font-size:clamp(16px,1.5vw,22px);font-weight:600}
+.bar .t small{display:block;font-weight:400;color:var(--soft);font-size:14px}
+.bar .track{background:var(--field2);height:clamp(28px,4vw,48px)}
+section.alt .bar .track{background:var(--ground)}
+.bar .fill{height:100%;background:var(--accent);transform-origin:left;transform:scaleX(0);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+.on .bar .fill{transform:scaleX(var(--v))}
+.bar .v{font-size:clamp(18px,1.8vw,26px);font-weight:700;text-align:right}
+/* loop */
+.loop{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.loop div{background:var(--field2);padding:clamp(16px,1.8vw,28px);display:grid;gap:10px;align-content:space-between;min-height:clamp(180px,26vh,280px)}
+.loop strong{font-size:clamp(22px,2.4vw,36px);letter-spacing:-.03em}
+.loop span{color:var(--soft);font-size:15px;line-height:1.4}
+.loop .gate{background:var(--accent);color:var(--accent-ink)}
+.loop .gate span{color:var(--accent-ink)}
+/* calculator */
+.calc{background:var(--ground);padding:clamp(20px,3vw,40px);display:grid;gap:24px}
+.ctl{display:grid;gap:8px}
+.ctl label{font-size:16px;color:var(--soft);display:flex;justify-content:space-between}
+.ctl label b{color:var(--ink);font-size:20px}
+input[type=range]{width:100%;accent-color:var(--accent);height:36px}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{font:inherit;font-size:16px;color:var(--ink);background:var(--field2);border:0;padding:12px 18px;cursor:pointer;min-height:44px}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.seg button:focus-visible,input:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.out{display:grid;gap:12px}
+.out .num{font-size:clamp(72px,9vw,140px);font-weight:700;letter-spacing:-.05em;line-height:.9}
+.meter{height:36px;background:var(--field2);position:relative;display:flex}
+.meter i{display:block;height:100%}
+.meter .m{position:absolute;top:0;bottom:0;width:4px;background:var(--ink)}
+.status{font-size:clamp(22px,2.4vw,34px);font-weight:700}
+.zones{display:flex;font-size:13px;color:var(--soft)}
+.zones span{flex:none;overflow:hidden;white-space:nowrap}
+/* diff */
+.diff{display:grid;gap:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row div{background:var(--field2);padding:clamp(14px,1.6vw,24px);font-size:clamp(15px,1.3vw,19px)}
+.row div b{display:block;font-size:clamp(28px,3vw,48px);letter-spacing:-.03em;line-height:1.05;margin-bottom:4px}
+.row .new{background:var(--accent);color:var(--accent-ink)}
+.row .new b{color:var(--accent-ink)}
+.row .keep{opacity:.7}
+img.shot{width:100%;display:block}
+.table{display:grid;gap:8px}
+.table .r{display:grid;grid-template-columns:minmax(150px,1.1fr) 2fr minmax(120px,1fr);gap:16px;background:var(--field2);padding:16px 20px;align-items:center}
+section.alt .table .r{background:var(--ground)}
+.table .r b{font-size:clamp(18px,1.6vw,24px)}
+.table .r em{font-style:normal;color:var(--accent);font-weight:700;text-align:right;font-size:clamp(17px,1.5vw,22px)}
+.table .r span{color:var(--soft);font-size:16px}
+.btn{display:inline-block;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:16px 28px;text-decoration:none;font-size:18px}
+.btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.foot{font-size:clamp(48px,13vw,230px);font-weight:700;letter-spacing:-.06em;line-height:.85;color:var(--field2)}
+section.alt .foot{color:var(--ground)}
+nav.dots{position:fixed;right:14px;top:50%;transform:translateY(-50%);display:grid;gap:8px;z-index:5}
+nav.dots a{width:10px;height:10px;background:var(--field2);display:block;border-radius:50%}
+nav.dots a.cur{background:var(--accent)}
+.prog{position:fixed;left:0;bottom:0;height:5px;background:var(--accent);width:0;z-index:6}
+/* entrance */
+.rise>*{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.on .rise>*{opacity:1;transform:none}
+.on .rise>*:nth-child(2){transition-delay:.08s}.on .rise>*:nth-child(3){transition-delay:.16s}
+.on .rise>*:nth-child(4){transition-delay:.24s}.on .rise>*:nth-child(5){transition-delay:.32s}.on .rise>*:nth-child(6){transition-delay:.4s}
+.loop div,.stat{transition:transform .2s}
+.loop div:hover,.stat:hover{transform:translateY(-4px)}
+@media(max-width:900px){
+  .cols{grid-template-columns:1fr}
+  .loop{grid-template-columns:1fr 1fr}
+  .table .r{grid-template-columns:1fr}.table .r em{text-align:left}
+  .row{grid-template-columns:1fr}
+  .bar{grid-template-columns:1fr 56px}.bar .t{grid-column:1/-1}
+  nav.dots{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rise>*{opacity:1;transform:none;transition:none}
+  .bar .fill{transform:scaleX(var(--v));transition:none}
+}
+@media print{section{min-height:auto;break-after:page}}
+</style>
+</head>
+<body>
+<div class="prog" id="prog"></div>
+<nav class="dots" id="dots" aria-label="Slides"></nav>
+
+<section id="top" class="on">
+  <div class="rise" style="display:grid;gap:clamp(20px,3vw,40px)">
+    <h1>One ranked relief plan from conflicting reports.</h1>
+    <div class="cols" style="grid-template-columns:1fr">
+      <div style="display:grid;gap:28px;justify-items:start">
+        <p class="lead">POSEIDON is a human-supervised command centre that verifies, ranks, allocates and re-routes disaster relief. Every piece of evidence carries a reliability score from 0 to 1.</p>
+        <a class="btn" href="#live">Try the scoring</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="rise" style="display:grid;gap:24px">
+    <h2>Reports arrive late and in conflict.</h2>
+    <p class="lead">During Cyclone Arnab (October 2026) the state returns alone were reported by department, district and hour. Each figure below is a provisional department return in our dataset.</p>
+  </div>
+  <div class="stats rise">
+    <div class="stat"><b class="a">4,786</b><span>houses damaged, Andhra Pradesh roll-up, 30 Oct 16:00 IST</span></div>
+    <div class="stat"><b class="a">3,046</b><span>huts damaged in the same return</span></div>
+    <div class="stat"><b class="a">28 / 28</b><span>districts reporting, status still unverified</span></div>
+    <div class="stat"><b class="a">12</b><span>districts in the marooned-habitations return, a different count</span></div>
+  </div>
+  <p class="cap">Source: dataset/processed_data/district_impact.csv, tagged PROVISIONAL.</p>
+</section>
+
+<section id="loop" class="alt">
+  <h2>Six steps, one loop, one human gate.</h2>
+  <div class="loop rise">
+    <div><strong>Verify</strong><span>Tier every report, merge duplicates, flag conflicts</span></div>
+    <div><strong>Prioritize</strong><span>Rank areas by severity, vulnerability, urgency, confidence</span></div>
+    <div><strong>Allocate</strong><span>Match teams, boats, ambulances and supplies</span></div>
+    <div><strong>Route</strong><span>Shortest safe path on a graph with closed roads removed</span></div>
+    <div class="gate"><strong>Operator</strong><span>Approve, edit or reject. Nothing is auto-sent</span></div>
+    <div><strong>Monitor, replan</strong><span>A break in the plan restarts the loop</span></div>
+  </div>
+  <p class="lead">Language models read and explain. Deterministic maths decides, so every score can be audited and replayed.</p>
+</section>
+
+<section id="tiers">
+  <div class="cols">
+    <div class="rise" style="display:grid;gap:24px">
+      <h2>Trust is a number, set by who said it.</h2>
+      <p class="lead">Four source tiers start with a reliability. Freshness, extraction confidence, location precision and media evidence then adjust it.</p>
+    </div>
+    <div class="bars rise">
+      <div class="bar"><div class="t">Official<small>Weather dept, field teams, hospital feed</small></div><div class="track"><div class="fill" style="--v:.9"></div></div><div class="v">0.90</div></div>
+      <div class="bar"><div class="t">Sensor<small>River and rain gauges</small></div><div class="track"><div class="fill" style="--v:.8"></div></div><div class="v">0.80</div></div>
+      <div class="bar"><div class="t">Public report<small>Helpline, citizen app</small></div><div class="track"><div class="fill" style="--v:.45"></div></div><div class="v">0.45</div></div>
+      <div class="bar"><div class="t">Unverified<small>Forwards, anonymous posts</small></div><div class="track"><div class="fill" style="--v:.2"></div></div><div class="v">0.20</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="live" class="alt">
+  <h2>Ten forwards of one rumour are not ten reports.</h2>
+  <div class="cols">
+    <div class="calc">
+      <div class="ctl">
+        <label for="n">Number of public reports (0.45 each) <b id="nv">6</b></label>
+        <input id="n" type="range" min="1" max="12" value="6">
+      </div>
+      <div class="ctl">
+        <label id="lb">Where they come from</label>
+        <div class="seg" role="group" aria-labelledby="lb">
+          <button type="button" id="indep" aria-pressed="true">Independent people</button>
+          <button type="button" id="fwd" aria-pressed="false">Forwards of one message</button>
+        </div>
+      </div>
+      <p class="cap">Noisy-OR fusion from the design report: C = 1 − ∏(1 − w·r). The first source counts in full (w = 1.0), each further copy counts 0.3.</p>
+    </div>
+    <div class="out calc" aria-live="polite">
+      <div class="num" id="c">0.00</div>
+      <div class="meter" id="meter"><i id="mf" style="background:var(--accent);width:0"></i></div>
+      <div class="zones"><span style="width:25%">Logged</span><span style="width:25%">Unverified watch</span><span style="width:30%">Probable</span><span style="width:20%">Confirmed</span></div>
+      <div class="status" id="st">Logged only</div>
+      <p class="cap" id="act"></p>
+    </div>
+  </div>
+</section>
+
+<section id="status">
+  <div class="cols">
+    <div class="rise" style="display:grid;gap:24px">
+      <h2>Weak evidence triggers a check.</h2>
+      <p class="lead">Confidence maps to what the system is allowed to do with it.</p>
+    </div>
+    <div class="table rise">
+      <div class="r"><b>0.80 and up</b><span>Confirmed: eligible for full allocation</span><em>100%</em></div>
+      <div class="r"><b>0.50 to 0.79</b><span>Probable: weighted by C, flagged for review</span><em>up to 60%</em></div>
+      <div class="r"><b>0.25 to 0.49</b><span>Unverified: no heavy resources, a verification task is created</span><em>0%</em></div>
+      <div class="r"><b>Below 0.25</b><span>Logged only, greyed out, no action</span><em>0%</em></div>
+    </div>
+  </div>
+</section>
+
+<section id="allocate" class="alt">
+  <h2>Fair by design, not by luck.</h2>
+  <div class="cols">
+    <div class="stats rise">
+      <div class="stat"><b class="a">1 first</b><span>Every confirmed Critical and High area gets one unit before any area gets a second</span></div>
+      <div class="stat"><b class="a">15%</b><span>of each unit type held in reserve for new emergencies</span></div>
+      <div class="stat"><b class="a">90%</b><span>shelter or hospital load that triggers the next-best recommendation</span></div>
+      <div class="stat"><b class="a">0</b><span>personal attributes used. Only area-level need indicators</span></div>
+    </div>
+    <div class="bars rise">
+      <p class="lead" style="max-width:none">Hospital recommendation score</p>
+      <div class="bar"><div class="t">Trauma match</div><div class="track"><div class="fill" style="--v:.4"></div></div><div class="v">40%</div></div>
+      <div class="bar"><div class="t">ETA, best open route</div><div class="track"><div class="fill" style="--v:.3"></div></div><div class="v">30%</div></div>
+      <div class="bar"><div class="t">Specialty match</div><div class="track"><div class="fill" style="--v:.2"></div></div><div class="v">20%</div></div>
+      <div class="bar"><div class="t">Data freshness</div><div class="track"><div class="fill" style="--v:.1"></div></div><div class="v">10%</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="replan">
+  <div class="cols">
+    <div class="rise" style="display:grid;gap:24px">
+      <div class="big">&lt; 5 s</div>
+      <h2>One closed bridge, minimal changes.</h2>
+      <p class="lead">Each assignment records its dependencies on roads, shelters and hospitals. Replanning touches that subset and shows the operator a before and after diff.</p>
+    </div>
+    <div class="diff rise">
+      <div class="row"><div class="keep"><b>Unchanged</b>Assignments with no dependency on the closure stay frozen</div><div class="new"><b>+14 min</b>Reroute only: extra time within the need class's tolerance</div></div>
+      <div class="row"><div class="new"><b>+9 min</b>Ring-road detour, but the patient needs trauma care within 30 minutes</div><div class="new"><b>Re-targeted</b>Next-best hospital with trauma capacity becomes the destination</div></div>
+      <p class="cap">Worked example from the design report. Replan time is the target for a district-scale demo.</p>
+    </div>
+  </div>
+</section>
+
+<section id="measures" class="alt">
+  <h2>Six measures, scored against a naive baseline.</h2>
+  <div class="table rise">
+    <div class="r"><b>Response time</b><span>Median and 90th percentile minutes, confirmed incident to approved dispatch and arrival</span><em>below baseline</em></div>
+    <div class="r"><b>Allocation efficiency</b><span>Priority-weighted demand served, unit utilization, average ETA</span><em>above baseline</em></div>
+    <div class="r"><b>Reliability handling</b><span>Share of dispatches to false or unconfirmed reports</span><em>near zero</em></div>
+    <div class="r"><b>Route adaptation</b><span>Replan time, assignments changed vs affected, routes via closed roads</span><em>&lt; 5 s, 0 closed</em></div>
+    <div class="r"><b>Explainability</b><span>Decisions with a complete why-card, replayable from the log</span><em>100%</em></div>
+    <div class="r"><b>Fairness</b><span>Gini of served-to-need ratio across wards, worst ward's ratio</span><em>lower Gini</em></div>
+  </div>
+  <p class="cap">A built-in simulator replays one scenario twice, with the baseline and with POSEIDON. The scenario is synthetic, so the comparison shows method behaviour, not real-world performance.</p>
+</section>
+
+<section id="data">
+  <h2>Built on real cyclone and flood records.</h2>
+  <div class="stats rise">
+    <div class="stat"><b class="a">60,677</b><span>NOAA IBTrACS North Indian Ocean best-track records</span></div>
+    <div class="stat"><b class="a">1,738</b><span>historical cyclone track points in the processed set</span></div>
+    <div class="stat"><b class="a">22</b><span>validated CSV files across hazards, resources and roads</span></div>
+    <div class="stat"><b class="a">19</b><span>official GTS alert messages (JTWC and IMD)</span></div>
+  </div>
+  <p class="lead">Every record carries a lineage tag: REAL, PROVISIONAL, DERIVED or SIMULATED. Synthetic demo records live in their own folder.</p>
+</section>
+
+<section id="honest" class="alt">
+  <div class="cols">
+    <div class="rise" style="display:grid;gap:24px">
+      <h2>Humans decide. We say what is proven.</h2>
+      <p class="lead">The operator approves, edits or rejects every life-critical dispatch. Public alerts and overriding official closures are never automated.</p>
+    </div>
+    <div class="stats rise">
+      <div class="stat"><b class="a s">Synthetic</b><span>The demo runs a realistic flood scenario for a ward-based district. No real-world validation is claimed.</span></div>
+      <div class="stat"><b class="a s">Same schema</b><span>Weather API, helpline and GPS adapters plug in without changing the engine.</span></div>
+      <div class="stat"><b class="a s">Tens</b><span>of units and areas: exact optimization in under a second. A city needs zone partitioning.</span></div>
+      <div class="stat"><b class="a s">Offline</b><span>Runs inside a local command-room network, with Wi-Fi, SMS and LoRa transports.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="ask">
+  <div class="rise" style="display:grid;gap:28px">
+    <h2>Turn uncertainty into action, with a person in charge.</h2>
+    <p class="lead">Next: pilot the replay against a district control room's historical incident log and publish the baseline comparison.</p>
+    <div><a class="btn" href="#top">Back to the start</a></div>
+  </div>
+  <div class="foot" aria-hidden="true">POSEIDON</div>
+</section>
+
+<script>
+(function(){
+  var secs=[].slice.call(document.querySelectorAll('section'));
+  var dots=document.getElementById('dots'), prog=document.getElementById('prog');
+  secs.forEach(function(s){var a=document.createElement('a');a.href='#'+s.id;a.setAttribute('aria-label','Go to '+s.id);dots.appendChild(a)});
+  var da=[].slice.call(dots.children);
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add('on');var i=secs.indexOf(e.target);da.forEach(function(d,j){d.classList.toggle('cur',i===j)});prog.style.width=((i+1)/secs.length*100)+'%'}
+  })},{threshold:.5});
+  secs.forEach(function(s){io.observe(s)});
+  document.addEventListener('keydown',function(e){
+    if(e.target.tagName==='INPUT')return;
+    var cur=Math.round(window.scrollY/window.innerHeight),n=cur;
+    if(['ArrowDown','ArrowRight','PageDown',' '].indexOf(e.key)>-1)n=Math.min(secs.length-1,cur+1);
+    else if(['ArrowUp','ArrowLeft','PageUp'].indexOf(e.key)>-1)n=Math.max(0,cur-1);
+    else return;
+    e.preventDefault();secs[n].scrollIntoView();
+  });
+  /* calculator: noisy-OR from the report */
+  var n=document.getElementById('n'),nv=document.getElementById('nv'),c=document.getElementById('c'),mf=document.getElementById('mf'),
+      st=document.getElementById('st'),act=document.getElementById('act'),ind=document.getElementById('indep'),fw=document.getElementById('fwd'),mode='indep';
+  function calc(){
+    var k=+n.value,r=.45,prod=1;
+    for(var i=0;i<k;i++){var w=(mode==='indep')?1:(i===0?1:.3);prod*=(1-w*r)}
+    var C=1-prod, capped=false;
+    if(mode==='fwd'&&k>=3&&C>.35){C=.35;capped=true}
+    nv.textContent=k;c.textContent=C.toFixed(2);mf.style.width=(C*100)+'%';
+    var s,a;
+    if(C>=.8){s='Confirmed';a='Eligible for full resource allocation.'}
+    else if(C>=.5){s='Probable';a='Eligible, weighted by C and flagged for operator review.'}
+    else if(C>=.25){s='Unverified watch';a='No heavy resources. A verification task is created.'}
+    else{s='Logged only';a='Stored and greyed out. No action.'}
+    st.textContent=s;act.textContent=a+(capped?' Near-identical messages with no media or independent source are capped at 0.35 as possible rumour.':'');
+  }
+  function setMode(m){mode=m;ind.setAttribute('aria-pressed',m==='indep');fw.setAttribute('aria-pressed',m==='fwd');calc()}
+  n.addEventListener('input',calc);ind.addEventListener('click',function(){setMode('indep')});fw.addEventListener('click',function(){setMode('fwd')});
+  calc();
+  if(location.search.indexOf('flat')>-1){
+    var st=document.createElement('style');st.textContent='section{min-height:900px!important}.rise>*{opacity:1!important;transform:none!important}.fill{transform:scaleX(var(--v))!important}';document.head.appendChild(st);
+    var o=[];document.querySelectorAll('h1,h2').forEach(function(h){var lh=parseFloat(getComputedStyle(h).lineHeight)||parseFloat(getComputedStyle(h).fontSize)*.98;o.push(h.textContent.slice(0,30)+' lines='+Math.round(h.getBoundingClientRect().height/lh))});
+    var pre=document.createElement('pre');pre.id='m';pre.textContent=o.join('\n')+'\nOVERFLOW='+(document.documentElement.scrollWidth>innerWidth);document.body.appendChild(pre);
+  }
+})();
+</script>
+</body>
+</html>

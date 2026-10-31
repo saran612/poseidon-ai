@@ -12,9 +12,9 @@ import {
   Zap,
 } from 'lucide-react';
 import { mockApi } from '@/lib/api';
-import { ReliabilityBar } from '@/components/common/ReliabilityBar';
-import { TierBadge } from '@/components/common/TierBadge';
-import { StaleBadge } from '@/components/common/StaleBadge';
+import { ReliabilityBar } from '@/comp/common/ReliabilityBar';
+import { TierBadge } from '@/comp/common/TierBadge';
+import { StaleBadge } from '@/comp/common/StaleBadge';
 import { useUiStore } from '@/store/useUiStore';
 
 export const SheltersHospitalsPage: React.FC = () => {
@@ -49,7 +49,7 @@ export const SheltersHospitalsPage: React.FC = () => {
             onClick={() => setTab('shelters')}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-all ${
               tab === 'shelters'
-                ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-white shadow-xs'
+                ? 'bg-white dark:bg-black text-blue-600 dark:text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400'
             }`}
           >
@@ -60,7 +60,7 @@ export const SheltersHospitalsPage: React.FC = () => {
             onClick={() => setTab('hospitals')}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-all ${
               tab === 'hospitals'
-                ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-white shadow-xs'
+                ? 'bg-white dark:bg-black text-blue-600 dark:text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400'
             }`}
           >
@@ -71,7 +71,7 @@ export const SheltersHospitalsPage: React.FC = () => {
       </div>
 
       {/* Autonomous Recommendation Panel */}
-      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -84,7 +84,7 @@ export const SheltersHospitalsPage: React.FC = () => {
             <select
               value={selectedOrigin}
               onChange={(e) => setSelectedOrigin(e.target.value)}
-              className="p-1 rounded border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-slate-900 text-xs font-medium"
+              className="p-1 rounded border border-indigo-200 dark:border-indigo-800 bg-white dark:bg-black text-xs font-medium"
             >
               {areas.map((a) => (
                 <option key={a.id} value={a.id}>
@@ -98,7 +98,7 @@ export const SheltersHospitalsPage: React.FC = () => {
         {/* Top + Alternative Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           {topShelter && (
-            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-indigo-200 dark:border-indigo-800 space-y-2">
+            <div className="p-3 bg-white dark:bg-black rounded-lg border border-indigo-200 dark:border-indigo-800 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px] uppercase">
                   Top Recommended Pick
@@ -113,7 +113,7 @@ export const SheltersHospitalsPage: React.FC = () => {
           )}
 
           {altShelter && (
-            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="p-3 bg-white dark:bg-black rounded-lg border border-slate-200 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between">
                 <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-bold text-[10px] uppercase">
                   Alternative Choice (Load Balance)
@@ -131,7 +131,7 @@ export const SheltersHospitalsPage: React.FC = () => {
 
       {/* Main Content Tables */}
       {tab === 'shelters' ? (
-        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs">
+        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-black shadow-xs">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 font-semibold uppercase tracking-wider">
@@ -196,7 +196,7 @@ export const SheltersHospitalsPage: React.FC = () => {
           </table>
         </div>
       ) : (
-        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-slate-900 shadow-xs">
+        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden bg-white dark:bg-black shadow-xs">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 font-semibold uppercase tracking-wider">

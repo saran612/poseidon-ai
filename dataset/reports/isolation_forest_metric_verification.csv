@@ -1,0 +1,10 @@
+verification_parameter,reported_in_pipeline,verified_ground_truth,status,audit_explanation
+Ground-Truth Anomaly Labels,Implicitly assumed binary labels,NONE (UNSUPERVISED),VERIFIED ABSENT,Neither historical_cyclone_tracks.csv nor wind_observations.csv contains ground-truth binary anomaly labels. The dataset is purely meteorological reanalysis track points.
+Test Accuracy,0.9073 (90.7%),NOT APPLICABLE (Unsupervised Inlier Rate),MATHEMATICAL ARTIFACT,"The reported 90.7% accuracy is merely the proportion of predictions classified as normal (1 - test_outlier_rate). It measures model prediction split, not prediction accuracy against truth."
+Test Precision,0.95 (95.0%),NOT AVAILABLE (Hardcoded Dummy),HARDCODED DUMMY,Literal float 0.95 hardcoded in scripts/train_all_models.py (line 344) because precision cannot be computed without ground-truth labels.
+Test Recall,0.95 (95.0%),NOT AVAILABLE (Hardcoded Dummy),HARDCODED DUMMY,Literal float 0.95 hardcoded in scripts/train_all_models.py (line 344).
+Test F1-Score,0.95 (95.0%),NOT AVAILABLE (Hardcoded Dummy),HARDCODED DUMMY,Literal float 0.95 hardcoded in scripts/train_all_models.py (line 344).
+Contamination Hyperparameter,0.05 (5.0%),0.05 (5.0%),VERIFIED TRUE,"Model trained with contamination=0.05, defining expected outlier quantile in training distribution."
+Empirical Test Outlier Rate,9.3%,29/313 (9.27%),VERIFIED TRUE,Exactly 29 of 313 test records (9.27%) flagged as anomalies by isolation forest.
+Empirical Test Inlier Rate,90.7%,284/313 (90.73%),VERIFIED TRUE,Exactly 284 of 313 test records (90.73%) classified as inliers within historical baseline.
+"Decision Score Distribution [Min, Median, Max]",Not reported in metrics CSV,"[-0.1030, 0.1241, 0.1812]",VERIFIED EMPIRICAL METRIC,"25th percentile: 0.0804, 75th percentile: 0.1538. Threshold is at 0.0000; scores < 0 denote anomalies."

@@ -1,0 +1,3 @@
+sim_report_id,sim_timestamp_utc,reported_location,latitude,longitude,simulated_hazard,simulated_people_at_risk,data_status,notes
+SIM_REP_001,2026-10-28T02:45:00Z,"Simulated Ward 4, Lowland Colony",16.55,82.02,urban_flash_flood_surging,25,SIMULATED,Synthetic scenario injection for autonomous routing simulation.
+SIM_REP_002,2026-10-28T03:15:00Z,Simulated Causeway Km 12,16.61,81.98,bridge_abutment_erosion_simulation,10,SIMULATED,Synthetic scenario injection for dynamic rerouting algorithm.

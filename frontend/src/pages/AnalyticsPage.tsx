@@ -12,17 +12,17 @@ import {
   Cell,
 } from 'recharts';
 import { BarChart3, Scale, ShieldCheck, Download, AlertTriangle } from 'lucide-react';
-import { KpiCard } from '@/components/common/KpiCard';
+import { KpiCard } from '@/comp/common/KpiCard';
 
 export const AnalyticsPage: React.FC = () => {
   // Fairness Served-to-Need ratio data per ward
   const fairnessData = [
-    { ward: 'Ward 84 (Ukkadam)', ratio: 0.92, need: 8420, served: 7746 },
-    { ward: 'Ward 58 (Singanallur)', ratio: 0.88, need: 6150, served: 5412 },
-    { ward: 'Ward 72 (Perur)', ratio: 0.85, need: 3900, served: 3315 },
-    { ward: 'Ward 39 (Peelamedu)', ratio: 0.81, need: 2800, served: 2268 },
-    { ward: 'Ward 21 (Ganapathy)', ratio: 0.79, need: 1950, served: 1540 },
-    { ward: 'Ward 96 (Madukkarai)', ratio: 0.76, need: 820, served: 623 },
+    { ward: 'Sector 14 (Krishnalanka)', ratio: 0.92, need: 8420, served: 7746 },
+    { ward: 'Sector 08 (Ajit Singh Nagar)', ratio: 0.88, need: 6150, served: 5412 },
+    { ward: 'Sector 23 (Bhavanipuram)', ratio: 0.85, need: 3900, served: 3315 },
+    { ward: 'Sector 19 (Gunadala)', ratio: 0.81, need: 2800, served: 2268 },
+    { ward: 'Sector 05 (Ibrahimpatnam)', ratio: 0.79, need: 1950, served: 1540 },
+    { ward: 'Sector 31 (Mangalagiri)', ratio: 0.76, need: 820, served: 623 },
   ];
 
   // Report by Tier
@@ -48,7 +48,7 @@ export const AnalyticsPage: React.FC = () => {
 
         <button
           onClick={() => alert('Exporting situational report as CSV...')}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"
+          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-black text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"
         >
           <Download className="w-3.5 h-3.5" />
           <span>Export Analytics CSV</span>
@@ -88,7 +88,7 @@ export const AnalyticsPage: React.FC = () => {
       </div>
 
       {/* Fairness Served-to-Need Bar Chart */}
-      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="font-bold text-sm text-slate-900 dark:text-white">
@@ -117,7 +117,7 @@ export const AnalyticsPage: React.FC = () => {
       </div>
 
       {/* Baseline Comparison Table */}
-      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3 text-xs">
+      <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-black shadow-xs space-y-3 text-xs">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-sm text-slate-900 dark:text-white">
             POSEIDON vs Traditional Dispatch Baseline

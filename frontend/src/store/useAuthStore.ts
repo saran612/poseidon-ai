@@ -14,17 +14,18 @@ export const DEMO_USERS: Record<UserRole, User> = {
   Operator: {
     id: 'usr-op-01',
     name: 'K. Murugan',
-    email: 'k.murugan@tnsdma.tn.gov.in',
+    email: 'k.murugan@disaster.ap.gov.in',
     role: 'Operator',
-    agency: 'State Emergency Operations Center (SEOC)',
+    agency: 'Vijayawada State Emergency Operations Center (AP-SEOC)',
     token: 'mock-jwt-token-operator',
   },
   Supervisor: {
     id: 'usr-sup-01',
     name: 'Dr. Anita Roy, IAS',
-    email: 'anita.roy@tnsdma.tn.gov.in',
+    email: 'anita.roy@disaster.ap.gov.in',
     role: 'Supervisor',
-    agency: 'District Disaster Management Authority (DDMA)',
+    agency: 'Andhra Pradesh Disaster Management Authority (APSDMA - Vijayawada)',
+
     token: 'mock-jwt-token-supervisor',
   },
   Viewer: {

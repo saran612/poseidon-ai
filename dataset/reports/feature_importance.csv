@@ -1,0 +1,14 @@
+task,model,feature,importance
+Flood Risk Prediction,Random Forest,rainfall_mm,0.2663936967527712
+Flood Risk Prediction,Random Forest,water_level_m,0.06335637541811485
+Flood Risk Prediction,Random Forest,danger_ratio,0.15034083149971042
+Flood Risk Prediction,Random Forest,flow_rate_cusecs,0.13320582433498568
+Flood Risk Prediction,Random Forest,wind_speed_kmh,0.2571023311080535
+Flood Risk Prediction,Random Forest,latitude,0.031108339464928553
+Flood Risk Prediction,Random Forest,longitude,0.09849260142143568
+Disaster Damage Prediction,Random Forest,wind_speed_kmh,0.29689726985174
+Disaster Damage Prediction,Random Forest,rainfall_mm,0.15045332869849926
+Disaster Damage Prediction,Random Forest,flood_depth_m,0.19464352712760058
+Disaster Damage Prediction,Random Forest,affected_population,0.12573865950305552
+Disaster Damage Prediction,Random Forest,evacuated_population,0.12652880581162979
+Disaster Damage Prediction,Random Forest,affected_households,0.10573840900747494

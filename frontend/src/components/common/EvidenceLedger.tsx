@@ -27,7 +27,7 @@ export const EvidenceLedger: React.FC<EvidenceLedgerProps> = ({ evidence, classN
         {evidence.map((item, idx) => (
           <div
             key={idx}
-            className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 text-xs space-y-1.5"
+            className="p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-black/40 text-xs space-y-1.5"
           >
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <div className="flex items-center gap-2">

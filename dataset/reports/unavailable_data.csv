@@ -1,0 +1,4 @@
+dataset_or_stream,reason_for_unavailability,alternative_used
+NOAA IBTrACS October 2026 Release for Arnab,NOAA IBTrACS release v04r00 covers historical storms through 2024; 2026 storms are pending official post-season best-track quality control.,Official IMD RSMC New Delhi bulletins and GDACS JTWC warning feeds extracted directly.
+NDEM NRSC Restricted Spatial Shapefiles,NDEM portal requires authenticated Indian Government intranet credentials and dual-factor mobile OTP authorization.,Publicly released NRSC Bhuvan flood footprints and IMD spatial polygons.
+"Real-Time Citizen Caller Identity (Phone, Name)",Protected under digital personal data protection privacy guidelines (Zero PII).,Cryptographic one-way SHA-256 caller ID hashing.

@@ -23,10 +23,10 @@ import {
   Radio,
 } from 'lucide-react';
 import { mockApi } from '@/lib/api';
-import { PriorityBandChip } from '@/components/common/PriorityBandChip';
-import { TierBadge } from '@/components/common/TierBadge';
-import { ReliabilityBar } from '@/components/common/ReliabilityBar';
-import { StaleBadge } from '@/components/common/StaleBadge';
+import { PriorityBandChip } from '@/comp/common/PriorityBandChip';
+import { TierBadge } from '@/comp/common/TierBadge';
+import { ReliabilityBar } from '@/comp/common/ReliabilityBar';
+import { StaleBadge } from '@/comp/common/StaleBadge';
 import { useUiStore } from '@/store/useUiStore';
 
 // Fix Leaflet standard marker icon paths in Vite
@@ -83,9 +83,8 @@ export const MapPage: React.FC = () => {
   const { data: incidents = [] } = useQuery({ queryKey: ['incidents'], queryFn: mockApi.getIncidents });
   const { data: roads = [] } = useQuery({ queryKey: ['roads'], queryFn: mockApi.getRoads });
   const { data: shelters = [] } = useQuery({ queryKey: ['shelters'], queryFn: mockApi.getShelters });
-  const { data: hospitals = [] } = useQuery({ queryKey: ['hospitals'], queryFn: mockApi.getHospitals });
+  const center: [number, number] = [16.5062, 80.6480]; // Vijayawada Impact Zone (Cyclone Arnab)
 
-  const center: [number, number] = [10.998, 76.965]; // Coimbatore Urban Corridor
 
   return (
     <div className="h-[calc(100vh-6rem)] relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-md">
@@ -274,7 +273,7 @@ export const MapPage: React.FC = () => {
       </MapContainer>
 
       {/* Floating Layers Panel */}
-      <div className="absolute top-4 right-4 z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl w-60 space-y-3 text-xs">
+      <div className="absolute top-4 right-4 z-10 bg-white/95 dark:bg-black/95 backdrop-blur-md p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xl w-60 space-y-3 text-xs">
         <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
           <Layers className="w-4 h-4 text-blue-600" />
           <span>Interactive Layers</span>

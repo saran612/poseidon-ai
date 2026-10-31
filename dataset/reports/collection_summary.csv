@@ -1,0 +1,23 @@
+dataset_name,source_agency,status,new_records,total_records,coverage,limitations
+cyclone_track.csv,IMD / JTWC (GDACS),COMPLETED,15,24,"Oct 26-29, 2026 track points",JTWC 1-min wind vs IMD 3-min wind kept distinct
+cyclone_bulletins.csv,IMD / JTWC,COMPLETED,5,8,Official advisories & landfall bulletins,Public bulletins transcribed
+wind_observations.csv,IMD RSMC / Observatories,COMPLETED,6,13,"Coastal AP stations (Narsapur, Kakinada, Vizag, etc.)",Surface observation intervals per synoptic hour
+rainfall_observations.csv,IMD / APSDMA,COMPLETED,12,12,24-hr gauge totals across landfall districts,Daily gauge returns
+river_water_levels.csv,CWC,COMPLETED,6,6,Godavari & Krishna barrage stations,Barrage gauge readings
+district_impact.csv,APSDMA / SEOC,COMPLETED,10,28,"Houses, crops, power infrastructure, boats",Provisional administrative returns
+affected_districts.csv,APSDMA / Districts,COMPLETED,12,12,Mandal level population and severity,Field survey rollups
+flood_inundation.csv,NRSC Bhuvan / INCOIS,COMPLETED,6,6,SAR flood footprints & surge models,Raster spatial layers abstracted to tabulated vectors
+emergency_alerts.csv,IMD / NDMA SACHET,COMPLETED,4,4,"Red warnings, cell broadcasts, port signals",Broadcast message text
+shelters.csv,APSDMA / NCRMP,COMPLETED,6,6,Multipurpose cyclone shelters in impact zone,Verified camp registrations
+hospitals.csv,AP Health Dept / OSM,COMPLETED,6,6,Apex referral and district trauma centres,Disaster surge capacity
+roads_and_closures.csv,AP R&B / NHAI,COMPLETED,5,5,"NH-16, NH-216 and coastal SH passability",Field police verification
+resources.csv,NDRF / SDRF / Fire Services,COMPLETED,5,5,"Boats, teams, pumps, ambulances, kitchens",Tactical stage locations
+relief_operations.csv,District Control Rooms,COMPLETED,4,4,Mass evacuation and supply delivery runs,Incident log returns
+citizen_reports.csv,1070 / 1077 Helplines,COMPLETED,5,5,Anonymized distress calls (No PII),Telephone transcript records
+incident_fusion.csv,SAHAYA Fusion Pipeline,COMPLETED,5,5,Corroborated incidents with evidence lineage,Algorithmic multi-source fusion
+historical_cyclone_tracks.csv,NOAA IBTrACS v04r00,COMPLETED,1738,1738,North Indian Ocean / AP cyclones (2004-2024),Historical closed-season archive
+historical_rainfall.csv,IMD,COMPLETED,12,12,Historic extreme rainfall during past cyclones,Station 24h maxima
+historical_flood_events.csv,CWC,COMPLETED,5,5,Major historical floods in Godavari/Krishna,Peak discharge returns
+historical_damage.csv,APSDMA / NDMA,COMPLETED,9,9,Post-disaster official assessments,Target classes for ML
+sources.csv,SAHAYA Data Engineering,COMPLETED,9,9,All official agency metadata and URLs,Public vs login restrictions documented
+data_dictionary.csv,SAHAYA Data Engineering,COMPLETED,30,30,Full schemas and field meanings,Standardized metadata

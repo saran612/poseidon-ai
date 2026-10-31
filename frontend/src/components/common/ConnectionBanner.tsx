@@ -1,11 +1,13 @@
 import React from 'react';
-import { Wifi, WifiOff, AlertTriangle } from 'lucide-react';
+import { Wifi, WifiOff } from 'lucide-react';
 import { useRealtimeStore } from '@/store/useRealtimeStore';
 
 export const ConnectionBanner: React.FC = () => {
   const { status, lastConnectedAt } = useRealtimeStore();
 
+
   if (status === 'connected') return null;
+
 
   const minutesAgo = lastConnectedAt
     ? Math.max(1, Math.floor((Date.now() - lastConnectedAt.getTime()) / 60000))
@@ -28,7 +30,7 @@ export const ConnectionBanner: React.FC = () => {
       </div>
 
       <span className="text-[11px] font-mono bg-amber-700/80 px-2 py-0.5 rounded uppercase tracking-wider">
-        {status === 'reconnecting' ? 'Retrying WebSocket' : 'Offline'}
+        {status === 'reconnecting' ? 'Reconnecting...' : 'Offline'}
       </span>
     </div>
   );

@@ -44,7 +44,7 @@ export const ReplanDiffModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-      <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border-2 border-amber-500 rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-2xl bg-white dark:bg-black border-2 border-amber-500 rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
         <div className="p-4 bg-amber-500 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -92,7 +92,7 @@ export const ReplanDiffModal: React.FC = () => {
               </div>
 
               {/* Old vs New comparison */}
-              <div className="grid grid-cols-2 gap-2 p-2 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800">
+              <div className="grid grid-cols-2 gap-2 p-2 bg-white dark:bg-black rounded border border-slate-200 dark:border-slate-800">
                 <div className="space-y-1">
                   <span className="text-[10px] text-slate-400 uppercase font-semibold">Previous Route</span>
                   <p className="text-slate-700 dark:text-slate-300 line-through opacity-70">
@@ -119,7 +119,7 @@ export const ReplanDiffModal: React.FC = () => {
         </div>
 
         {/* Footer controls */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="p-4 bg-slate-50 dark:bg-black border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <button
             onClick={() => setActiveReplanDiff(null)}
             className="px-3 py-1.5 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white cursor-pointer"

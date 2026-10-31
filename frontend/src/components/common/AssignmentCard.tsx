@@ -60,8 +60,8 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, comp
     <div
       className={`border rounded-xl transition-all ${
         assignment.state === 'proposed'
-          ? 'border-blue-500 bg-white dark:bg-slate-900 shadow-sm ring-1 ring-blue-500/20'
-          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900'
+          ? 'border-blue-500 bg-white dark:bg-black shadow-sm ring-1 ring-blue-500/20'
+          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-black'
       } p-3.5 space-y-2.5`}
     >
       {/* Header */}
@@ -138,7 +138,7 @@ export const AssignmentCard: React.FC<AssignmentCardProps> = ({ assignment, comp
       {/* Confirmation Modal */}
       {confirmDialog && confirmDialog.open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-2xl space-y-4">
+          <div className="w-full max-w-md bg-white dark:bg-black border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-2xl space-y-4">
             <div className="flex items-center gap-2 text-slate-900 dark:text-white">
               <ShieldAlert className="w-5 h-5 text-amber-500" />
               <h3 className="font-semibold text-base">
