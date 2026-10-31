@@ -39,10 +39,10 @@ echo [OK] Node.js and npm found.
 
 :: 3. Identify frontend directory
 set "FRONTEND_DIR="
-if exist "%ROOT_DIR%frontend_temp\package.json" (
-    set "FRONTEND_DIR=%ROOT_DIR%frontend_temp"
-) else if exist "%ROOT_DIR%frontend\package.json" (
+if exist "%ROOT_DIR%frontend\package.json" (
     set "FRONTEND_DIR=%ROOT_DIR%frontend"
+) else if exist "%ROOT_DIR%frontend_temp\package.json" (
+    set "FRONTEND_DIR=%ROOT_DIR%frontend_temp"
 ) else if exist "%ROOT_DIR%ui\package.json" (
     set "FRONTEND_DIR=%ROOT_DIR%ui"
 )
@@ -56,9 +56,9 @@ echo [OK] Using frontend directory: %FRONTEND_DIR%
 
 :: 4. Stop any existing instances to avoid port conflicts
 echo.
-echo Checking for previous instances on ports 8000 and 3000...
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Where-Object { $_.OwningProcess -gt 0 } | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }" >nul 2>&1
-powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Where-Object { $_.OwningProcess -gt 0 } | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }" >nul 2>&1
+echo Checking for previous instances on ports 8000, 3000, and 3001...
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "8000, 3000, 3001 | ForEach-Object { Get-NetTCPConnection -LocalPort $_ -ErrorAction SilentlyContinue | Where-Object { $_.OwningProcess -gt 0 } | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue } }" >nul 2>&1
 
 :: 5. Launch Backend (FastAPI on Port 8000)
 echo.
