@@ -34,3 +34,11 @@ This document records key decisions made during the autonomous build of the POSE
 ## 5. Security & Internationalization
 - Token storage strictly in-memory; mock auth supports predefined personas (Operator, Supervisor, Viewer).
 - English, Tamil (தமிழ்), and Hindi (हिन्दी) localization dictionaries for critical UI strings and incident statuses.
+
+## 6. Fix 1: i18n Resolution & Resource Completeness
+- **Problem**: Raw translation keys (`nav.overview`, `nav.map`, etc.) were displayed in the sidebar because `i18n.ts` imported `initReactI18next` through a relative path that created a mismatched instance, causing `useTranslation` to fail finding the initialized i18next instance.
+- **Resolution**:
+  - Fixed `react-i18next` import to standard package resolution.
+  - Added full navigation dictionary keys for English, Tamil (தமிழ்), and Hindi (हिन्दी) including `nav.dispatchQueue`.
+  - Added dev-only `missingKeyHandler` to log any missing keys in the console.
+  - Created unit test `src/tests/i18n.test.ts` verifying key resolution across en, ta, and hi.
