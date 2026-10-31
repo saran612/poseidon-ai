@@ -12,6 +12,7 @@ import { DecisionsPage } from '@/pages/DecisionsPage';
 import { WeatherDashboardPage } from '@/pages/WeatherDashboardPage';
 import { WeatherPage } from '@/pages/WeatherPage';
 import { AnalyticsPage } from '@/pages/AnalyticsPage';
+import { MlIntelligencePage } from '@/pages/MlIntelligencePage';
 import { LogsPage } from '@/pages/LogsPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { realtimeClient } from '@/lib/realtime';
@@ -49,6 +50,7 @@ export const App: React.FC = () => {
             <Route path="decisions" element={<DecisionsPage />} />
             <Route path="weather" element={<WeatherDashboardPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
+            <Route path="ml-intelligence" element={<MlIntelligencePage />} />
             <Route path="logs" element={<LogsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />

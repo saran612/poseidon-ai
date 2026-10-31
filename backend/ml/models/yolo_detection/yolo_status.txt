@@ -1,0 +1,4 @@
+STATUS: UNAVAILABLE FOR TRAINING
+REASON: No annotated satellite/aerial image bounding box dataset or valid 'dataset.yaml' file exists in repository.
+POLICY COMPLIANCE: Adhering to strict protocol - no fake image labels or synthetic annotations fabricated.
+ACTION: When drone/aerial survey images and label polygons are collected, fine-tuning YOLOv8 weights can be resumed.

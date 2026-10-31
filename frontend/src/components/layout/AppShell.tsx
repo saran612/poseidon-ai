@@ -21,6 +21,7 @@ import {
   ChevronRight,
   Shield,
   Radio,
+  BrainCircuit,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useUiStore } from '@/store/useUiStore';
@@ -65,6 +66,7 @@ export const AppShell: React.FC = () => {
     { label: t('nav.routing'), path: '/routing', icon: Navigation },
     { label: t('nav.decisions'), path: '/decisions', icon: HelpCircle },
     { label: t('nav.analytics'), path: '/analytics', icon: BarChart3 },
+    { label: 'AI Intelligence', path: '/ml-intelligence', icon: BrainCircuit },
     { label: t('nav.logs'), path: '/logs', icon: ListOrdered },
     { label: t('nav.settings'), path: '/settings', icon: Settings },
   ];

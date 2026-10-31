@@ -8,6 +8,8 @@ from fastapi.responses import FileResponse, JSONResponse
 from backend.core.config import get_settings
 from backend.core.database import init_db
 from backend.api.v1.router import api_router
+from backend.api.v1.endpoints import ml as ml_endpoints
+from backend.ml.model_loader import get_model_loader
 
 settings = get_settings()
 
@@ -16,6 +18,8 @@ settings = get_settings()
 async def lifespan(app: FastAPI):
     # Startup: Ensure database schema is ready
     await init_db()
+    # Load SAHAYA ML models into memory once at application startup
+    get_model_loader().load_models()
     yield
 
 
@@ -37,6 +41,9 @@ app.add_middleware(
 # Register API v1 routes
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+# Register direct /api/ml routes for flexible frontend and SDK consumption
+app.include_router(ml_endpoints.router, prefix="/api/ml", tags=["SAHAYA Machine Learning Intelligence (Direct)"])
+
 
 @app.get("/api/info")
 async def api_info():
@@ -46,6 +53,7 @@ async def api_info():
         "version": settings.VERSION,
         "docs_url": "/docs",
         "api_v1": settings.API_V1_STR,
+        "ml_intelligence": "/api/v1/ml",
     }
 
 
