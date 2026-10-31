@@ -2,33 +2,47 @@
 
 @layer base {
   :root {
-    /* Pure White Light Theme */
-    --bg-main: #FFFFFF;
-    --bg-secondary: #FFFFFF;
-    --bg-card: #FFFFFF;
+    --bg-main: #F8FAFC;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #F1F5F9;
     --text-primary: #0F172A;
-    --text-secondary: #475569;
-    --text-muted: #64748B;
-    --border-color: #E2E8F0;
-    --accent: #2563EB;
+    --text-secondary: #334155;
+    --text-muted: #475569;
+    --border-subtle: #E2E8F0;
+    --border-strong: #CBD5E1;
+
+    --color-primary: #2563EB;
+    --color-critical: #DC2626;
+    --color-high: #D97706;
+    --color-medium: #CA8A04;
+    --color-low: #475569;
+    --color-safe: #16A34A;
+    --color-info: #0284C7;
   }
 
   .dark {
-    /* Pure Pitch Black OLED Dark Theme (Black, not navy/slate/blue) */
-    --bg-main: #000000;
-    --bg-secondary: #000000;
-    --bg-card: #0A0A0A;
+    --bg-main: #090D16;
+    --bg-surface: #111827;
+    --bg-subtle: #1F2937;
     --text-primary: #F8FAFC;
-    --text-secondary: #A1A1AA;
-    --text-muted: #71717A;
-    --border-color: #1F1F23;
-    --accent: #3B82F6;
+    --text-secondary: #E2E8F0;
+    --text-muted: #94A3B8;
+    --border-subtle: #1F2937;
+    --border-strong: #374151;
+
+    --color-primary: #3B82F6;
+    --color-critical: #EF4444;
+    --color-high: #F59E0B;
+    --color-medium: #EAB308;
+    --color-low: #94A3B8;
+    --color-safe: #22C55E;
+    --color-info: #38BDF8;
   }
 
   body {
     background-color: var(--bg-main);
     color: var(--text-primary);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 'Inter', sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -37,98 +51,40 @@
 
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-feature-settings: "tnum" 1, "cv02" 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
   }
 }
 
-/* ========================================================
-   LIGHT THEME: ALL SURFACES & COMPONENTS PURE CLEAN WHITE
-   ======================================================== */
-:root:not(.dark) body,
-:root:not(.dark) main,
-:root:not(.dark) aside,
-:root:not(.dark) header,
-:root:not(.dark) nav,
-:root:not(.dark) .bg-slate-50,
-:root:not(.dark) .bg-slate-50\/70,
-:root:not(.dark) .bg-slate-50\/50,
-:root:not(.dark) .bg-slate-50\/40,
-:root:not(.dark) .bg-slate-50\/20,
-:root:not(.dark) .bg-slate-100,
-:root:not(.dark) .bg-slate-100\/70,
-:root:not(.dark) .bg-slate-100\/50 {
-  background-color: #FFFFFF !important;
+/* Base custom utility classes */
+.bg-app-main {
+  background-color: var(--bg-main);
 }
-
-:root:not(.dark) .border-slate-200,
-:root:not(.dark) .border-slate-100 {
-  border-color: #E2E8F0 !important;
+.bg-app-surface {
+  background-color: var(--bg-surface);
 }
-
-:root:not(.dark) .text-slate-900,
-:root:not(.dark) .text-slate-800 {
-  color: #0F172A !important;
+.bg-app-subtle {
+  background-color: var(--bg-subtle);
 }
-
-:root:not(.dark) .text-slate-600,
-:root:not(.dark) .text-slate-500 {
-  color: #475569 !important;
+.border-app-subtle {
+  border-color: var(--border-subtle);
 }
-
-/* Interactive elements in light mode */
-:root:not(.dark) input,
-:root:not(.dark) select,
-:root:not(.dark) textarea {
-  background-color: #FFFFFF !important;
-  color: #0F172A !important;
-  border-color: #CBD5E1 !important;
+.border-app-strong {
+  border-color: var(--border-strong);
 }
-
-/* ========================================================
-   DARK THEME: PURE BLACK OLED BASE (#000000)
-   ======================================================== */
-.dark body,
-.dark main {
-  background-color: #000000 !important;
-  color: #F8FAFC !important;
+.text-app-primary {
+  color: var(--text-primary);
 }
-
-.dark .bg-white {
-  background-color: #0A0A0A !important;
+.text-app-secondary {
+  color: var(--text-secondary);
 }
-
-.dark .bg-slate-50,
-.dark .bg-slate-50\/70,
-.dark .bg-slate-50\/50,
-.dark .bg-slate-50\/40,
-.dark .bg-slate-50\/20,
-.dark .bg-slate-100,
-.dark .bg-slate-100\/70,
-.dark .bg-slate-200 {
-  background-color: #121214 !important;
-}
-
-.dark .dark\:bg-slate-950,
-.dark .dark\:bg-slate-900,
-.dark .dark\:bg-slate-900\/90,
-.dark .dark\:bg-slate-900\/40,
-.dark .dark\:bg-slate-900\/95,
-.dark .dark\:bg-slate-800,
-.dark .dark\:bg-slate-800\/60,
-.dark .dark\:bg-slate-800\/40,
-.dark .dark\:bg-slate-800\/50 {
-  background-color: #08080A !important;
-}
-
-.dark .dark\:border-slate-800,
-.dark .dark\:border-slate-700,
-.dark .dark\:border-slate-900,
-.dark .border-slate-200,
-.dark .border-slate-100 {
-  border-color: #1C1C20 !important;
-}
-
-.dark .dark\:divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #1C1C20 !important;
+.text-app-muted {
+  color: var(--text-muted);
 }
 
 /* Crisp Clean Enterprise Scrollbars */
@@ -137,23 +93,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FFFFFF;
+  background: var(--bg-main);
 }
 ::-webkit-scrollbar-thumb {
-  background: #E2E8F0;
+  background: var(--border-strong);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #CBD5E1;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: #000000;
-}
-.dark ::-webkit-scrollbar-thumb {
-  background: #27272A;
-  border-radius: 4px;
-}
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #3F3F46;
+  background: var(--text-muted);
 }

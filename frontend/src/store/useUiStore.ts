@@ -22,8 +22,17 @@ interface UiState {
   setMapTileUrl: (url: string) => void;
 }
 
+const getInitialTheme = (): 'light' | 'dark' => {
+  const stored = localStorage.getItem('poseidon-theme');
+  if (stored === 'light' || stored === 'dark') return stored;
+  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
+};
+
 export const useUiStore = create<UiState>((set) => ({
-  theme: (localStorage.getItem('poseidon-theme') as 'light' | 'dark') || 'light',
+  theme: getInitialTheme(),
   setTheme: (theme) => {
     localStorage.setItem('poseidon-theme', theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');

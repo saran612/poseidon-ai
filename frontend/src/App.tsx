@@ -31,8 +31,10 @@ realtimeClient.init(queryClient);
 
 export const App: React.FC = () => {
   React.useEffect(() => {
-    const savedTheme = (localStorage.getItem('poseidon-theme') as 'light' | 'dark') || 'light';
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    const stored = localStorage.getItem('poseidon-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = stored === 'dark' || stored === 'light' ? stored : prefersDark ? 'dark' : 'light';
+    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
   }, []);
 
   return (

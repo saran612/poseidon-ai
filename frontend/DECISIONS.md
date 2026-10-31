@@ -42,3 +42,10 @@ This document records key decisions made during the autonomous build of the POSE
   - Added full navigation dictionary keys for English, Tamil (தமிழ்), and Hindi (हिन्दी) including `nav.dispatchQueue`.
   - Added dev-only `missingKeyHandler` to log any missing keys in the console.
   - Created unit test `src/tests/i18n.test.ts` verifying key resolution across en, ta, and hi.
+
+## 7. Fix 2: Unified Theme Architecture & Persistence
+- **Problem**: Inconsistent theme tokens and contrasting styles where light and dark elements clashed with arbitrary background rules and poor text contrast.
+- **Resolution**:
+  - Established single source of truth in `src/index.css` with semantic CSS variables (`--bg-main`, `--bg-surface`, `--bg-subtle`, `--text-primary`, `--text-secondary`, `--text-muted`, `--border-subtle`, `--border-strong`, and semantic alert colors).
+  - Configured `useUiStore` and `App.tsx` to initialize from user's `localStorage` or default to system `prefers-color-scheme`.
+  - Driven `.dark` class directly on `<html>` with persistent state across components and map chrome.

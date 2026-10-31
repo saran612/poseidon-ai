@@ -52,14 +52,9 @@ htmlcov/
 .tox/
 
 # Node & Frontend Build Artifacts
-frontend/
 node_modules/
-frontend_temp/node_modules/
 frontend/node_modules/
-frontend_temp/dist/
 frontend/dist/
-.vite/
-frontend_temp/.vite/
 frontend/.vite/
 ui/node_modules/
 ui/dist/
