@@ -57,21 +57,17 @@ echo [OK] Using frontend directory: %FRONTEND_DIR%
 :: 4. Stop any existing instances to avoid port conflicts
 echo.
 echo Checking for previous instances on ports 8000 and 3000...
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":8000" ^| findstr "LISTENING"') do (
-    taskkill /F /PID %%a >nul 2>&1
-)
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":3000" ^| findstr "LISTENING"') do (
-    taskkill /F /PID %%a >nul 2>&1
-)
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-NetTCPConnection -LocalPort 8000 -ErrorAction SilentlyContinue | Where-Object { $_.OwningProcess -gt 0 } | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }" >nul 2>&1
+powershell -NoProfile -ExecutionPolicy Bypass -Command "Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Where-Object { $_.OwningProcess -gt 0 } | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }" >nul 2>&1
 
 :: 5. Launch Backend (FastAPI on Port 8000)
 echo.
-echo [1/2] Launching POSEIDON Backend (FastAPI)...
-start "POSEIDON-Backend" cmd /k "cd /d "%ROOT_DIR%" && title POSEIDON-Backend && !PYTHON_EXE! -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload"
+echo [1/2] Launching POSEIDON Backend on http://localhost:8000 ...
+start "POSEIDON-Backend" /D "%ROOT_DIR%" cmd /k "!PYTHON_EXE! -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload"
 
-:: 6. Launch Frontend (Vite on Port 3000)
-echo [2/2] Launching POSEIDON Frontend (React Vite)...
-start "POSEIDON-Frontend" cmd /k "cd /d "%FRONTEND_DIR%" && title POSEIDON-Frontend && npm run dev"
+:: 6. Launch Frontend (React Vite on Port 3000)
+echo [2/2] Launching POSEIDON Frontend on http://localhost:3000 ...
+start "POSEIDON-Frontend" /D "%FRONTEND_DIR%" cmd /k "npm run dev"
 
 :: 7. Summary
 echo.
