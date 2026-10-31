@@ -50,9 +50,10 @@ async def api_info():
 
 
 # Serve Frontend static assets if built
+frontend_temp_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend_temp", "dist")
 frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
 legacy_ui_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "dist")
-static_dist = frontend_dist if os.path.exists(frontend_dist) else legacy_ui_dist
+static_dist = frontend_temp_dist if os.path.exists(frontend_temp_dist) else (frontend_dist if os.path.exists(frontend_dist) else legacy_ui_dist)
 
 if os.path.exists(static_dist):
     app.mount("/assets", StaticFiles(directory=os.path.join(static_dist, "assets")), name="assets")

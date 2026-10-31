@@ -1,9 +1,9 @@
-# Stage 1: Build React Frontend
-FROM node:20-alpine AS frontend-builder
-WORKDIR /frontend
-COPY frontend/package*.json ./
+# Stage 1: Build React frontend_temp
+FROM node:20-alpine AS frontend_temp-builder
+WORKDIR /frontend_temp
+COPY frontend_temp/package*.json ./
 RUN npm install
-COPY frontend/ ./
+COPY frontend_temp/ ./
 RUN npm run build
 
 # Stage 2: Python Backend Server
@@ -19,8 +19,8 @@ COPY requirements.txt pyproject.toml README.md ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-# Copy compiled frontend from Stage 1 into /app/frontend/dist
-COPY --from=frontend-builder /frontend/dist /app/frontend/dist
+# Copy compiled frontend_temp from Stage 1 into /app/frontend_temp/dist
+COPY --from=frontend_temp-builder /frontend_temp/dist /app/frontend_temp/dist
 RUN pip install --no-cache-dir -e . --no-build-isolation
 
 EXPOSE 8000

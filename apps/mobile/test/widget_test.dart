@@ -5,9 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poseidon_mobile/core/providers.dart';
 import 'package:poseidon_mobile/database/local_database.dart';
 import 'package:poseidon_mobile/main.dart';
+import 'package:poseidon_mobile/services/websocket_service.dart';
 import 'package:poseidon_mobile/sync/outbox_manager.dart';
 import 'package:poseidon_mobile/sync/sync_engine.dart';
 import 'package:poseidon_mobile/sync/transport_adapter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TestTransportAdapter implements TransportAdapter {
   @override
@@ -18,7 +20,20 @@ class TestTransportAdapter implements TransportAdapter {
   Future<TransportResult> transmit(OutboxEntry entry) async => TransportResult.success('test-ack');
 }
 
+class TestWebSocketService extends WebSocketService {
+  @override
+  void connect({String? customUrl}) {}
+  @override
+  void disconnect() {}
+  @override
+  void dispose() {}
+}
+
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('Poseidon mobile smoke and navigation test', (WidgetTester tester) async {
     tester.view.physicalSize = const Size(800, 1200);
     tester.view.devicePixelRatio = 1.0;
@@ -28,6 +43,7 @@ void main() {
     final transport = TestTransportAdapter();
     final outbox = OutboxManager(db: memoryDb, primaryTransport: transport);
     final syncEngine = SyncEngine(db: memoryDb, outboxManager: outbox, transportAdapter: transport);
+    final mockWs = TestWebSocketService();
 
     await tester.pumpWidget(
       ProviderScope(
@@ -36,12 +52,14 @@ void main() {
           transportAdapterProvider.overrideWithValue(transport),
           outboxManagerProvider.overrideWithValue(outbox),
           syncEngineProvider.overrideWithValue(syncEngine),
+          webSocketServiceProvider.overrideWithValue(mockWs),
         ],
         child: const PoseidonMobileApp(),
       ),
     );
 
-    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
     // Verify Dashboard renders
     expect(find.text('POSEIDON AI'), findsOneWidget);
@@ -56,17 +74,20 @@ void main() {
 
     // Navigate to Reports tab
     await tester.tap(find.text('Reports'));
-    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('Field Incident Reports'), findsOneWidget);
 
     // Navigate to Assignments tab
     await tester.tap(find.text('Assignments'));
-    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('Rescue & Relief Assignments'), findsOneWidget);
 
     // Navigate to Profile tab
     await tester.tap(find.text('Profile'));
-    await tester.pump(const Duration(milliseconds: 200));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('Device & Field Operator Profile'), findsOneWidget);
 
     syncEngine.dispose();
