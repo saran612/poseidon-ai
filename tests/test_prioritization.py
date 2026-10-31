@@ -1,9 +1,9 @@
 import pytest
 from datetime import datetime, timezone
 
-from poseidon.geospatial.corridor import CoimbatoreRoadNetwork, COIMBATORE_ZONES
-from poseidon.situation.prioritization import DisasterPrioritizationEngine
-from poseidon.trust.engine import ClusterSummary, EvidenceStatus
+from backend.geospatial.corridor import CoimbatoreRoadNetwork, COIMBATORE_ZONES
+from backend.situation.prioritization import DisasterPrioritizationEngine
+from backend.trust.engine import ClusterSummary, EvidenceStatus
 
 
 def test_unverified_200_claim_affects_upper_bound_only():

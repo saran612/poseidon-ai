@@ -16,7 +16,7 @@ This guide provides the operational steps to execute and observe the complete 20
 1. **Start the Backend API Server**:
    ```powershell
    # From c:\project\poseidon
-   python -m uvicorn poseidon.main:app --host 0.0.0.0 --port 8000 --reload
+   python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
    ```
 
 2. **Access the Mission Command Centre**:

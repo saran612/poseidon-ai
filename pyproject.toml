@@ -37,7 +37,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["poseidon*"]
+include = ["backend*"]
 exclude = ["alembic*", "tests*"]
 
 [tool.pytest.ini_options]

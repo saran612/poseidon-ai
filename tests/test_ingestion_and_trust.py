@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta, timezone
 import pytest
 
-from poseidon.ingestion.codec import encode_frame, decode_frame, encode_sms_payload, decode_sms_payload
-from poseidon.ingestion.envelope import AuthStatus, SourceTier
-from poseidon.ingestion.message_router import MessageRouter
-from poseidon.ingestion.replay_protection import ReplayProtectionEngine
-from poseidon.ingestion.transports.base import RawTransportPacket
-from poseidon.trust.engine import EvidenceTrustEngine, EvidenceStatus
+from backend.ingestion.codec import encode_frame, decode_frame, encode_sms_payload, decode_sms_payload
+from backend.ingestion.envelope import AuthStatus, SourceTier
+from backend.ingestion.message_router import MessageRouter
+from backend.ingestion.replay_protection import ReplayProtectionEngine
+from backend.ingestion.transports.base import RawTransportPacket
+from backend.trust.engine import EvidenceTrustEngine, EvidenceStatus
 
 
 SECRET_KEY = b"test-secret-key-for-node-32bytes!"
@@ -220,7 +220,7 @@ def test_public_reports_alone_cannot_reach_verified():
     ev_list = []
     for i in range(5):
         envelope = MessageRouter().devices  # dummy
-        from poseidon.ingestion.envelope import NormalizedEnvelope
+        from backend.ingestion.envelope import NormalizedEnvelope
         env = NormalizedEnvelope(
             message_id=f"cit-{i}",
             origin_id=f"orig-cit-{i}",
@@ -255,7 +255,7 @@ def test_t1_source_produces_verified_status():
     # Set officer with established reputation (1.10)
     engine.set_reputation("DEV-OFFICER-01", 1.10)
 
-    from poseidon.ingestion.envelope import NormalizedEnvelope
+    from backend.ingestion.envelope import NormalizedEnvelope
     env_t1 = NormalizedEnvelope(
         message_id="t1-001",
         origin_id="orig-t1-001",
@@ -325,7 +325,7 @@ def test_ten_whatsapp_forwards_produce_one_cluster_and_no_casualty_inflation():
     now = datetime.now(timezone.utc)
 
     # 10 forwarded reports of the same 15 trapped people at the same location
-    from poseidon.ingestion.envelope import NormalizedEnvelope
+    from backend.ingestion.envelope import NormalizedEnvelope
     forwards = []
     for i in range(10):
         env = NormalizedEnvelope(
@@ -361,7 +361,7 @@ def test_coarse_location_widens_cluster_matching_radius():
     engine = EvidenceTrustEngine()
     now = datetime.now(timezone.utc)
 
-    from poseidon.ingestion.envelope import NormalizedEnvelope
+    from backend.ingestion.envelope import NormalizedEnvelope
     # Base report at (10.9900, 76.9600)
     ev1 = engine.evaluate_envelope(
         NormalizedEnvelope(
