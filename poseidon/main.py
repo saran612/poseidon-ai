@@ -50,24 +50,27 @@ async def api_info():
 
 
 # Serve Frontend static assets if built
-ui_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "dist")
-if os.path.exists(ui_dist):
-    app.mount("/assets", StaticFiles(directory=os.path.join(ui_dist, "assets")), name="assets")
+frontend_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "dist")
+legacy_ui_dist = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "dist")
+static_dist = frontend_dist if os.path.exists(frontend_dist) else legacy_ui_dist
+
+if os.path.exists(static_dist):
+    app.mount("/assets", StaticFiles(directory=os.path.join(static_dist, "assets")), name="assets")
 
     @app.get("/")
-    async def serve_ui_root(request: Request):
+    async def serve_frontend_root(request: Request):
         # If client explicitly asks for JSON, return JSON info
         accept = request.headers.get("accept", "")
         if "application/json" in accept and "text/html" not in accept:
             return await api_info()
-        return FileResponse(os.path.join(ui_dist, "index.html"))
+        return FileResponse(os.path.join(static_dist, "index.html"))
 
     @app.get("/{full_path:path}")
     async def serve_spa_fallback(full_path: str):
-        file_path = os.path.join(ui_dist, full_path)
+        file_path = os.path.join(static_dist, full_path)
         if os.path.exists(file_path) and os.path.isfile(file_path):
             return FileResponse(file_path)
-        return FileResponse(os.path.join(ui_dist, "index.html"))
+        return FileResponse(os.path.join(static_dist, "index.html"))
 else:
     @app.get("/")
     async def root():

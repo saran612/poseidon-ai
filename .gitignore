@@ -53,9 +53,12 @@ htmlcov/
 
 # Node & Frontend Build Artifacts
 node_modules/
+frontend/node_modules/
+frontend/dist/
+.vite/
+frontend/.vite/
 ui/node_modules/
 ui/dist/
-.vite/
 ui/.vite/
 
 # Logs & Debugging
