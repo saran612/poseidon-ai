@@ -72,47 +72,48 @@ export const OverviewPage: React.FC = () => {
       {/* KPI Cards Row */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <KpiCard
-          title="Open Incidents"
-          value={`${criticalCount} Crit`}
-          subtitle={`${highCount} High Priority`}
+          label="Open Incidents"
+          value={`${criticalCount} Critical`}
+          caption={`${highCount} High priority`}
           icon={AlertCircle}
-          variant="critical"
+          severity="critical"
         />
         <KpiCard
-          title="Fleet Units"
-          value={`${availableUnits}/${totalUnits}`}
-          subtitle="Available / Deployed"
+          label="Fleet Units (Available / Deployed)"
+          value={`${availableUnits} / ${totalUnits - availableUnits}`}
+          caption={`${availableUnits} ready, ${totalUnits - availableUnits} in field`}
           icon={TrendingUp}
-          variant="safe"
+          severity="safe"
         />
         <KpiCard
-          title="Shelter Capacity"
+          label="Shelter Occupancy"
           value={`${occupancyPct}%`}
-          subtitle={`${totalOccupancy}/${totalShelterCap} Occupied`}
+          caption={`${totalOccupancy.toLocaleString()} / ${totalShelterCap.toLocaleString()} beds`}
           icon={Building2}
-          variant={occupancyPct > 80 ? 'warning' : 'default'}
+          severity={occupancyPct > 80 ? 'warning' : 'safe'}
         />
         <KpiCard
-          title="Pending Approvals"
+          label="Pending Approvals"
           value={pendingApprovals}
-          subtitle="Requires Operator Action"
+          caption="Needs operator action"
           icon={ShieldAlert}
-          variant={pendingApprovals > 0 ? 'warning' : 'safe'}
+          severity={pendingApprovals > 0 ? 'warning' : 'safe'}
         />
         <KpiCard
-          title="Median Response"
-          value="14.2m"
-          subtitle="-3.4m vs baseline"
+          label="Median Response"
+          value="14:12"
+          caption="18% faster than baseline"
           icon={Clock}
-          trend={{ value: '18% faster', isPositive: true }}
-          variant="default"
+          trend={{ value: '-3:24', isPositive: true }}
+          severity="info"
         />
         <KpiCard
-          title="Avg Reliability"
-          value={`${(avgReliability * 100).toFixed(0)}%`}
-          subtitle="Multi-source consensus"
+          label="Average Reliability"
+          value={avgReliability.toFixed(2)}
+          caption="Multi-source consensus"
           icon={Radio}
-          variant="default"
+          tierDistribution={{ t1: 45, t2: 30, t3: 15, t4: 10 }}
+          severity="default"
         />
       </div>
 

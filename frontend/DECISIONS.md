@@ -49,3 +49,16 @@ This document records key decisions made during the autonomous build of the POSE
   - Established single source of truth in `src/index.css` with semantic CSS variables (`--bg-main`, `--bg-surface`, `--bg-subtle`, `--text-primary`, `--text-secondary`, `--text-muted`, `--border-subtle`, `--border-strong`, and semantic alert colors).
   - Configured `useUiStore` and `App.tsx` to initialize from user's `localStorage` or default to system `prefers-color-scheme`.
   - Driven `.dark` class directly on `<html>` with persistent state across components and map chrome.
+
+## 8. Fix 3: Redesigned KPI Cards & Tabular Number Figures
+- **Problem**: KPI cards showed ambiguous captions without prominent values ("Shelter Capacity", "Median response", "Avg reliability" had unformatted or clipped labels) and used disparate background tints.
+- **Resolution**:
+  - Redesigned `KpiCard` to use a neutral surface with colored vertical left indicator borders and small icon chips.
+  - Required values implemented with high contrast:
+    - Open Incidents: `2 Critical` with `1 High priority` caption.
+    - Fleet Units: `3 / 3` (labeled Available / Deployed) with `3 ready, 3 in field` caption.
+    - Shelter Occupancy: `74%` with `890 / 1,200 beds` caption.
+    - Pending Approvals: `1` with `Needs operator action` caption.
+    - Median Response: `14:12` with `18% faster than baseline` trend chip.
+    - Average Reliability: `0.85` with miniature tier mix distribution bar (`T1` to `T4`).
+  - Enforced `tabular-nums` typography and minimum 4.5:1 WCAG AA text contrast ratio.
