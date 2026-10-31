@@ -1,0 +1,2 @@
+sim_dispatch_id,target_incident,assigned_vehicle,simulated_eta_minutes,data_status,notes
+SIM_DSP_001,SIM_REP_001,SIM_BOAT_UNIT_09,14.5,SIMULATED,Simulated autonomous dispatch engine test.

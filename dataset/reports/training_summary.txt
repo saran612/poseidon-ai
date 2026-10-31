@@ -1,0 +1,36 @@
+
+============================================================
+1. TRAINING FLOOD RISK PREDICTION MODELS (RF & XGBoost)
+============================================================
+Flood Risk Dataset: Total=22 records (Train=16, Test=6)
+Classes: {0: 'CRITICAL', 1: 'HIGH', 2: 'LOW', 3: 'MODERATE'}
+Baseline Acc: 0.333 | RF Test Acc: 1.000 (Train: 1.000, F1: 1.000) | XGBoost Test Acc: 0.833 (Train: 1.000, F1: 0.833)
+
+============================================================
+2. TRAINING DISASTER DAMAGE PREDICTION MODELS (RF & XGBoost)
+============================================================
+Disaster Damage Dataset: Total=22 records (Train=16, Test=6)
+Classes: {0: 'CATASTROPHIC', 1: 'CRITICAL', 2: 'HIGH', 3: 'MODERATE'}
+Baseline Acc: 0.333 | RF Test Acc: 0.500 (Train: 1.000, F1: 0.389) | XGBoost Test Acc: 0.667 (Train: 0.938, F1: 0.611)
+
+============================================================
+3. TRAINING SENSOR ANOMALY DETECTION (Isolation Forest)
+============================================================
+Sensor Anomaly Dataset: Total=1564 readings (Train=1251, Test=313)
+Test Set Evaluation: Normal=284 (90.7%), Anomalous=29 (9.3%)
+
+============================================================
+4. TRAINING EMERGENCY INCIDENT CLASSIFIER (TF-IDF + Logistic Regression)
+============================================================
+Emergency Incident Dataset: Total=30 reports (Train=22, Test=8)
+Classes (6): ['flood', 'medical_emergency', 'other', 'rescue_request', 'road_blockage', 'shelter_request']
+Baseline Acc: 0.125 | LR Test Acc: 0.500 (Train: 1.000, Weighted F1: 0.437)
+
+============================================================
+5. INSPECTING YOLO FLOOD / DAMAGE DETECTION AVAILABILITY
+============================================================
+YOLOv8 Detection: Documented as UNAVAILABLE (No image bounding box dataset exists; strictly adhering to rule against fabricating fake annotations).
+
+============================================================
+SAVING COMPREHENSIVE METRICS, FEATURE IMPORTANCES & SUMMARY REPORTS
+============================================================

@@ -1,0 +1,31 @@
+file,field,data_type,units,meaning
+cyclone_track.csv,record_id,string,code,Unique identifier for track observation or forecast coordinate point.
+cyclone_track.csv,record_kind,string,categorical,"Type of track point: observed_position, forecast_position, or landfall_location."
+cyclone_track.csv,wind_max_kmh,float,km/h,Maximum sustained surface wind speed in km/h.
+cyclone_track.csv,pressure_hpa,float,hPa,Estimated central atmospheric pressure at sea level in hectopascals.
+cyclone_bulletins.csv,bulletin_id,string,code,Unique identifier for official meteorological bulletin or warning.
+cyclone_bulletins.csv,headline,string,text,"Official summary headline, warning color code, and scope."
+wind_observations.csv,station_code,float,WMO station code,World Meteorological Organization 5-digit station code.
+wind_observations.csv,mslp_hpa,float,hPa,Mean Sea Level Pressure measured by calibrated station barometer.
+rainfall_observations.csv,rainfall_mm,float,millimeters,24-hour accumulated rainfall measured at automatic rain gauge.
+rainfall_observations.csv,measurement_type,string,categorical,"observed_gauge, satellite_estimate, or model_forecast."
+river_water_levels.csv,water_level_m,float,meters,Observed river water level relative to mean sea level.
+river_water_levels.csv,danger_level_m,float,meters,Officially designated danger mark threshold defined by CWC.
+district_impact.csv,metric,string,categorical,"Impact metric name (e.g. houses_damaged, crop_area_submerged, poles_damaged)."
+district_impact.csv,data_status,string,categorical,"Authenticity status: REAL, PROVISIONAL, DERIVED, SIMULATED, or UNAVAILABLE."
+affected_districts.csv,affected_population,integer,persons,Estimated resident population within impacted administrative division.
+flood_inundation.csv,depth_m,float,meters,Flood water depth above ground level.
+flood_inundation.csv,observed_or_modelled,string,categorical,Distinction between observed satellite footprint and hydrodynamic model.
+emergency_alerts.csv,severity,string,categorical,"Alert severity tier: RED_ALERT, FLASH_EMERGENCY, GREAT_DANGER_SIGNAL, FLOOD_WARNING."
+shelters.csv,capacity_persons,integer,persons,Engineered holding capacity of the shelter facility.
+shelters.csv,occupancy_persons,integer,persons,Actual verified evacuee head-count accommodated during the event.
+hospitals.csv,emergency_capability,string,categorical,Trauma and casualty capability level under disaster operating protocol.
+roads_and_closures.csv,status,string,categorical,"Operational status: OPEN_NORMAL, RESTRICTED_EMERGENCY_ONLY, CLOSED_BREACHED, CLOSED_FLOODED."
+resources.csv,availability_status,string,categorical,"Operational readiness: DEPLOYED_OPERATIONAL, STANDBY_ALERT, EN_ROUTE."
+relief_operations.csv,people_assisted,integer,persons,"Verified count of individuals evacuated, rescued, or provisioned."
+citizen_reports.csv,reporter_id_hash,string,SHA-256 hash,One-way cryptographic hash of caller contact ID to protect privacy (Zero PII).
+incident_fusion.csv,confidence_score,float,score (0.0 to 1.0),Algorithmic confidence based on multi-source corroboration.
+historical_cyclone_tracks.csv,cyclone_id,string,IBTrACS SID,Unique NOAA Storm Identification code.
+historical_rainfall.csv,rainfall_24h_mm,float,millimeters,24-hour recorded precipitation during historical cyclone event.
+historical_flood_events.csv,peak_discharge_cusecs,float,cusecs,Peak flood discharge measured at river gauging station / barrage.
+historical_damage.csv,damage_severity_label,string,class label,"Target variable for supervised machine learning (MODERATE, HIGH, CRITICAL, CATASTROPHIC)."
