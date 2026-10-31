@@ -29,6 +29,11 @@ const queryClient = new QueryClient({
 realtimeClient.init(queryClient);
 
 export const App: React.FC = () => {
+  React.useEffect(() => {
+    const savedTheme = (localStorage.getItem('poseidon-theme') as 'light' | 'dark') || 'dark';
+    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>

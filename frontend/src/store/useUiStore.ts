@@ -23,16 +23,30 @@ interface UiState {
 }
 
 export const useUiStore = create<UiState>((set) => ({
-  theme: 'light',
+  theme: (localStorage.getItem('poseidon-theme') as 'light' | 'dark') || 'dark',
   setTheme: (theme) => {
+    localStorage.setItem('poseidon-theme', theme);
     document.documentElement.classList.toggle('dark', theme === 'dark');
-    set({ theme });
+    set({
+      theme,
+      mapTileUrl:
+        theme === 'dark'
+          ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+          : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    });
   },
   toggleTheme: () => {
     set((state) => {
       const next = state.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('poseidon-theme', next);
       document.documentElement.classList.toggle('dark', next === 'dark');
-      return { theme: next };
+      return {
+        theme: next,
+        mapTileUrl:
+          next === 'dark'
+            ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+            : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      };
     });
   },
   language: 'en',

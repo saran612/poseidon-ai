@@ -5,16 +5,23 @@
     --bg-main: #FFFFFF;
     --bg-secondary: #F8FAFC;
     --bg-card: #FFFFFF;
-    --text-primary: #172B4D;
-    --text-secondary: #64748B;
-    --text-muted: #94A3B8;
-    --primary-blue: #2563EB;
-    --light-blue: #EFF6FF;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
     --border-color: #E2E8F0;
-    --critical: #DC2626;
-    --high: #D97706;
-    --medium: #CA8A04;
-    --safe: #16A34A;
+    --accent: #2563EB;
+  }
+
+  .dark {
+    /* Pure Black Dark Theme (OLED / Command Center true pitch black, not navy/slate/blue) */
+    --bg-main: #000000;
+    --bg-secondary: #050505;
+    --bg-card: #0A0A0A;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --border-color: #1F1F23;
+    --accent: #3B82F6;
   }
 
   body {
@@ -24,6 +31,7 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   code, pre, .font-mono {
@@ -31,10 +39,55 @@
   }
 }
 
+/* OLED true-black dark mode overrides for utility classes */
+.dark body {
+  background-color: #000000 !important;
+  color: #F8FAFC !important;
+}
+
+.dark .bg-white {
+  background-color: #0A0A0A !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-50\/70,
+.dark .bg-slate-100,
+.dark .bg-slate-100\/70,
+.dark .bg-slate-200 {
+  background-color: #121214 !important;
+}
+
+.dark .dark\:bg-slate-950,
+.dark .dark\:bg-slate-900,
+.dark .dark\:bg-slate-900\/90,
+.dark .dark\:bg-slate-900\/40,
+.dark .dark\:bg-slate-900\/95,
+.dark .dark\:bg-slate-800,
+.dark .dark\:bg-slate-800\/60,
+.dark .dark\:bg-slate-800\/40,
+.dark .dark\:bg-slate-800\/50 {
+  background-color: #08080A !important;
+}
+
+.dark .dark\:border-slate-800,
+.dark .dark\:border-slate-700,
+.dark .dark\:border-slate-900 {
+  border-color: #1C1C20 !important;
+}
+
+.dark .border-slate-200,
+.dark .border-slate-100 {
+  border-color: #1C1C20 !important;
+}
+
+.dark .dark\:divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1C1C20 !important;
+}
+
 /* Subtle, clean enterprise scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: #F1F5F9;
@@ -45,4 +98,15 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #000000;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3F3F46;
 }
