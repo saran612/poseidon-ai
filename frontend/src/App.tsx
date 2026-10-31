@@ -9,6 +9,7 @@ import { ResourcesPage } from '@/pages/ResourcesPage';
 import { SheltersHospitalsPage } from '@/pages/SheltersHospitalsPage';
 import { RoutingPage } from '@/pages/RoutingPage';
 import { DecisionsPage } from '@/pages/DecisionsPage';
+import { WeatherDashboardPage } from '@/pages/WeatherDashboardPage';
 import { WeatherPage } from '@/pages/WeatherPage';
 import { AnalyticsPage } from '@/pages/AnalyticsPage';
 import { LogsPage } from '@/pages/LogsPage';
@@ -46,7 +47,7 @@ export const App: React.FC = () => {
             <Route path="shelters" element={<SheltersHospitalsPage />} />
             <Route path="routing" element={<RoutingPage />} />
             <Route path="decisions" element={<DecisionsPage />} />
-            <Route path="weather" element={<WeatherPage />} />
+            <Route path="weather" element={<WeatherDashboardPage />} />
             <Route path="analytics" element={<AnalyticsPage />} />
             <Route path="logs" element={<LogsPage />} />
             <Route path="settings" element={<SettingsPage />} />

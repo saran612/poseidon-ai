@@ -37,6 +37,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+// Resizer component to ensure Leaflet calculates correct container size immediately on mount & tab transition
+function MapResizer() {
+  const map = useMap();
+  React.useEffect(() => {
+    map.invalidateSize();
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [map]);
+  return null;
+}
+
 // Custom SVG Icons for Leaflet Markers
 const createSvgIcon = (color: string, label: string) =>
   L.divIcon({
@@ -83,6 +96,7 @@ export const MapPage: React.FC = () => {
         className="h-full w-full z-0"
         scrollWheelZoom={true}
       >
+        <MapResizer />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={mapTileUrl}
